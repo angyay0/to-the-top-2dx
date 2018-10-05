@@ -7,6 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0327C33D2167E8A8009CEFAE /* Toolkit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0327C33B2167E8A8009CEFAE /* Toolkit.cpp */; };
+		0327C3422167EA77009CEFAE /* SplashScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0327C3402167EA77009CEFAE /* SplashScene.cpp */; };
+		0327C3452167EAA5009CEFAE /* LoadingScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0327C3432167EAA5009CEFAE /* LoadingScene.cpp */; };
+		0327C3482167EAB9009CEFAE /* MainMenuScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0327C3462167EAB9009CEFAE /* MainMenuScene.cpp */; };
+		0327C34B2167EACC009CEFAE /* HelpScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0327C3492167EACC009CEFAE /* HelpScene.cpp */; };
+		0327C34E2167EB83009CEFAE /* Character.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0327C34C2167EB83009CEFAE /* Character.cpp */; };
+		0327C3512167EB95009CEFAE /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0327C34F2167EB95009CEFAE /* Player.cpp */; };
+		0327C3542167EBA6009CEFAE /* Enemy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0327C3522167EBA6009CEFAE /* Enemy.cpp */; };
+		0327C3592167EBF7009CEFAE /* ParallaxLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0327C3572167EBF7009CEFAE /* ParallaxLayer.cpp */; };
+		0327C35C2167EC0F009CEFAE /* ParallaxNodeExtras.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0327C35A2167EC0F009CEFAE /* ParallaxNodeExtras.cpp */; };
+		0327C3602167EE34009CEFAE /* ObjectsSpawner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0327C35E2167EE34009CEFAE /* ObjectsSpawner.cpp */; };
+		0327C3632167EE69009CEFAE /* GameObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0327C3612167EE69009CEFAE /* GameObject.cpp */; };
+		0327C3662167EECD009CEFAE /* GameHUD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0327C3642167EECD009CEFAE /* GameHUD.cpp */; };
 		1A88B2641FC3D9C9005C14AE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A88B2631FC3D9C9005C14AE /* Images.xcassets */; };
 		1AC6FB21180E996B004C840B /* libcocos2d Mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FAF9180E9839004C840B /* libcocos2d Mac.a */; };
 		1AC6FB30180E99EB004C840B /* libcocos2d iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FB07180E9839004C840B /* libcocos2d iOS.a */; };
@@ -96,6 +109,33 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0327C33A2167E726009CEFAE /* AndroidPatch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AndroidPatch.h; sourceTree = "<group>"; };
+		0327C33B2167E8A8009CEFAE /* Toolkit.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Toolkit.cpp; sourceTree = "<group>"; };
+		0327C33C2167E8A8009CEFAE /* Toolkit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Toolkit.h; sourceTree = "<group>"; };
+		0327C3402167EA77009CEFAE /* SplashScene.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SplashScene.cpp; sourceTree = "<group>"; };
+		0327C3412167EA77009CEFAE /* SplashScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SplashScene.h; sourceTree = "<group>"; };
+		0327C3432167EAA5009CEFAE /* LoadingScene.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LoadingScene.cpp; sourceTree = "<group>"; };
+		0327C3442167EAA5009CEFAE /* LoadingScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoadingScene.h; sourceTree = "<group>"; };
+		0327C3462167EAB9009CEFAE /* MainMenuScene.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MainMenuScene.cpp; sourceTree = "<group>"; };
+		0327C3472167EAB9009CEFAE /* MainMenuScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainMenuScene.h; sourceTree = "<group>"; };
+		0327C3492167EACC009CEFAE /* HelpScene.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = HelpScene.cpp; sourceTree = "<group>"; };
+		0327C34A2167EACC009CEFAE /* HelpScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HelpScene.h; sourceTree = "<group>"; };
+		0327C34C2167EB83009CEFAE /* Character.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Character.cpp; sourceTree = "<group>"; };
+		0327C34D2167EB83009CEFAE /* Character.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Character.h; sourceTree = "<group>"; };
+		0327C34F2167EB95009CEFAE /* Player.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Player.cpp; sourceTree = "<group>"; };
+		0327C3502167EB95009CEFAE /* Player.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
+		0327C3522167EBA6009CEFAE /* Enemy.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Enemy.cpp; sourceTree = "<group>"; };
+		0327C3532167EBA6009CEFAE /* Enemy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Enemy.h; sourceTree = "<group>"; };
+		0327C3572167EBF7009CEFAE /* ParallaxLayer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ParallaxLayer.cpp; sourceTree = "<group>"; };
+		0327C3582167EBF7009CEFAE /* ParallaxLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ParallaxLayer.h; sourceTree = "<group>"; };
+		0327C35A2167EC0F009CEFAE /* ParallaxNodeExtras.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ParallaxNodeExtras.cpp; sourceTree = "<group>"; };
+		0327C35B2167EC0F009CEFAE /* ParallaxNodeExtras.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ParallaxNodeExtras.h; sourceTree = "<group>"; };
+		0327C35E2167EE34009CEFAE /* ObjectsSpawner.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ObjectsSpawner.cpp; sourceTree = "<group>"; };
+		0327C35F2167EE34009CEFAE /* ObjectsSpawner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjectsSpawner.h; sourceTree = "<group>"; };
+		0327C3612167EE69009CEFAE /* GameObject.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameObject.cpp; sourceTree = "<group>"; };
+		0327C3622167EE69009CEFAE /* GameObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameObject.h; sourceTree = "<group>"; };
+		0327C3642167EECD009CEFAE /* GameHUD.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameHUD.cpp; sourceTree = "<group>"; };
+		0327C3652167EECD009CEFAE /* GameHUD.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameHUD.h; sourceTree = "<group>"; };
 		1A88B2631FC3D9C9005C14AE /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		1AC6FAE5180E9839004C840B /* cocos2d_libs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cocos2d_libs.xcodeproj; path = ../cocos2d/build/cocos2d_libs.xcodeproj; sourceTree = "<group>"; };
 		1ACB3243164770DE00914215 /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = ../../cocos2dx/platform/third_party/ios/libraries/libcurl.a; sourceTree = "<group>"; };
@@ -188,6 +228,78 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0327C3382167E6E5009CEFAE /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				0327C3562167EBE3009CEFAE /* Parallax */,
+				0327C33A2167E726009CEFAE /* AndroidPatch.h */,
+				0327C33C2167E8A8009CEFAE /* Toolkit.h */,
+				0327C33B2167E8A8009CEFAE /* Toolkit.cpp */,
+				0327C3652167EECD009CEFAE /* GameHUD.h */,
+				0327C3642167EECD009CEFAE /* GameHUD.cpp */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		0327C33E2167E944009CEFAE /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				0327C35D2167EE1B009CEFAE /* Objects */,
+				0327C3552167EBB8009CEFAE /* Character */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		0327C33F2167E950009CEFAE /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				0327C3442167EAA5009CEFAE /* LoadingScene.h */,
+				0327C3432167EAA5009CEFAE /* LoadingScene.cpp */,
+				0327C3412167EA77009CEFAE /* SplashScene.h */,
+				0327C3402167EA77009CEFAE /* SplashScene.cpp */,
+				0327C3472167EAB9009CEFAE /* MainMenuScene.h */,
+				0327C3462167EAB9009CEFAE /* MainMenuScene.cpp */,
+				0327C34A2167EACC009CEFAE /* HelpScene.h */,
+				0327C3492167EACC009CEFAE /* HelpScene.cpp */,
+			);
+			path = Scenes;
+			sourceTree = "<group>";
+		};
+		0327C3552167EBB8009CEFAE /* Character */ = {
+			isa = PBXGroup;
+			children = (
+				0327C34D2167EB83009CEFAE /* Character.h */,
+				0327C34C2167EB83009CEFAE /* Character.cpp */,
+				0327C3502167EB95009CEFAE /* Player.h */,
+				0327C34F2167EB95009CEFAE /* Player.cpp */,
+				0327C3532167EBA6009CEFAE /* Enemy.h */,
+				0327C3522167EBA6009CEFAE /* Enemy.cpp */,
+			);
+			path = Character;
+			sourceTree = "<group>";
+		};
+		0327C3562167EBE3009CEFAE /* Parallax */ = {
+			isa = PBXGroup;
+			children = (
+				0327C3582167EBF7009CEFAE /* ParallaxLayer.h */,
+				0327C3572167EBF7009CEFAE /* ParallaxLayer.cpp */,
+				0327C35B2167EC0F009CEFAE /* ParallaxNodeExtras.h */,
+				0327C35A2167EC0F009CEFAE /* ParallaxNodeExtras.cpp */,
+			);
+			path = Parallax;
+			sourceTree = "<group>";
+		};
+		0327C35D2167EE1B009CEFAE /* Objects */ = {
+			isa = PBXGroup;
+			children = (
+				0327C3622167EE69009CEFAE /* GameObject.h */,
+				0327C3612167EE69009CEFAE /* GameObject.cpp */,
+				0327C35F2167EE34009CEFAE /* ObjectsSpawner.h */,
+				0327C35E2167EE34009CEFAE /* ObjectsSpawner.cpp */,
+			);
+			path = Objects;
+			sourceTree = "<group>";
+		};
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -281,6 +393,9 @@
 		46880B8319C43A87006E1F66 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				0327C33F2167E950009CEFAE /* Scenes */,
+				0327C33E2167E944009CEFAE /* Core */,
+				0327C3382167E6E5009CEFAE /* Utils */,
 				46880B8419C43A87006E1F66 /* AppDelegate.cpp */,
 				46880B8519C43A87006E1F66 /* AppDelegate.h */,
 				46880B8619C43A87006E1F66 /* HelloWorldScene.cpp */,
@@ -443,10 +558,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0327C3422167EA77009CEFAE /* SplashScene.cpp in Sources */,
+				0327C3482167EAB9009CEFAE /* MainMenuScene.cpp in Sources */,
+				0327C3632167EE69009CEFAE /* GameObject.cpp in Sources */,
+				0327C33D2167E8A8009CEFAE /* Toolkit.cpp in Sources */,
 				1AF87B781F6F77F7007BE51C /* AppController.mm in Sources */,
+				0327C3592167EBF7009CEFAE /* ParallaxLayer.cpp in Sources */,
 				1AF87B8B1F6F782A007BE51C /* RootViewController.mm in Sources */,
 				46880B8819C43A87006E1F66 /* AppDelegate.cpp in Sources */,
+				0327C3452167EAA5009CEFAE /* LoadingScene.cpp in Sources */,
+				0327C35C2167EC0F009CEFAE /* ParallaxNodeExtras.cpp in Sources */,
+				0327C3542167EBA6009CEFAE /* Enemy.cpp in Sources */,
+				0327C34B2167EACC009CEFAE /* HelpScene.cpp in Sources */,
+				0327C3512167EB95009CEFAE /* Player.cpp in Sources */,
+				0327C3662167EECD009CEFAE /* GameHUD.cpp in Sources */,
 				1AF87B8A1F6F7822007BE51C /* main.m in Sources */,
+				0327C3602167EE34009CEFAE /* ObjectsSpawner.cpp in Sources */,
+				0327C34E2167EB83009CEFAE /* Character.cpp in Sources */,
 				46880B8A19C43A87006E1F66 /* HelloWorldScene.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
