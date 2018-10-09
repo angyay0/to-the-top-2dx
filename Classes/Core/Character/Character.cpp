@@ -7,7 +7,10 @@
 
 #include "Character.h"
 
-bool Character::initWith(const std::string &sprite,struct GOAttributes attributes) {
-    
-    return true;
+void Character::setPoints(int points){
+    auto attributes = this->getAttributes();
+    attributes.canInteract = true;
+    attributes.canProvidePoints = true;
+    attributes.points = points;
 }
+

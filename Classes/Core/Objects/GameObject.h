@@ -6,6 +6,9 @@
 //
 
 #include <stdio.h>
+#include "cocos2d.h"
+
+USING_NS_CC;
 
 struct GOPosition {
     float xVal = 0;
@@ -13,24 +16,27 @@ struct GOPosition {
 };
 
 struct GOAttributes {
-    std::string name = "GOGeneric";
+    std::string name = "Generic Object";
+    int points;
     bool isAlive = false;
     bool isPlayable = false;
+    bool isCollidable = false;
     bool canInteract = false;
     bool canMove = false;
+    bool canProvidePoints = false;
 };
 
 class GameObject {
 protected:
-    std::string sprite_name;
+    Sprite *sprite;
     struct GOPosition position;
     struct GOAttributes attributes;
 public:
     struct GOPosition movement;
-    virtual bool initWith(const std::string &sprite,struct GOAttributes attributes);
+    virtual void move();
+    virtual bool initWith(const std::string &sprite_name,struct GOAttributes attributes);
     struct GOAttributes getAttributes();
     void setInitialPosition(struct GOPosition);
     void setPosition(float x,float y);
-    std::string getSpriteKey();
-    void move();
+    Sprite *getSprite();    
 };

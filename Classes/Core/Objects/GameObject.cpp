@@ -5,11 +5,16 @@
 //  Created by Eduardo Pérez on 05/10/18.
 //
 
+#include "cocos2d.h"
 #include "GameObject.h"
 
-bool GameObject::initWith(const std::string &sprite, struct GOAttributes attributes) {
+USING_NS_CC;
+
+bool GameObject::initWith(const std::string &sprite_name, struct GOAttributes attributes) {
     this->attributes = attributes;
-    this->sprite_name = sprite;
+    
+    auto polinfo = AutoPolygon::generatePolygon(sprite_name);
+    this->sprite = Sprite::create(polinfo);
     
     movement.xVal = 0.0f;
     movement.yVal = 0.0f;
@@ -37,6 +42,6 @@ void GameObject::move() {
     }
 }
 
-std::string GameObject::getSpriteKey() {
-    return this->sprite_name;
+Sprite *GameObject::getSprite() {
+    return this->sprite;
 }
