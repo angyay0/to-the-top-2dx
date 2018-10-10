@@ -26,8 +26,9 @@
 #define __HELLOWORLD_SCENE_H__
 
 #include "cocos2d.h"
+#include "GameHUD.h"
 
-class HelloWorld : public cocos2d::Scene
+class HelloWorld : public cocos2d::Scene, public GameHUDClickProtocol
 {
 public:
     static cocos2d::Scene* createScene();
@@ -36,6 +37,8 @@ public:
     
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);
+    
+    void onHUDItemClickedCallback(cocos2d::Ref *pSender);
     
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);

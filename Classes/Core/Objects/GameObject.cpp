@@ -33,6 +33,8 @@ void GameObject::setInitialPosition(struct GOPosition position) {
 void GameObject::setPosition(float x, float y) {
     this->position.xVal = x;
     this->position.yVal = y;
+    
+    this->sprite->setPosition(this->position.xVal,this->position.yVal);
 }
 
 void GameObject::move() {

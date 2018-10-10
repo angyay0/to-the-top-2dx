@@ -4,9 +4,10 @@
 //
 //  Created by Eduardo Pérez on 05/10/18.
 //
+// TODO
 
-#ifndef Enemy_hpp
-#define Enemy_hpp
+#ifndef Enemy_h
+#define Enemy_h
 
 #include <stdio.h>
 

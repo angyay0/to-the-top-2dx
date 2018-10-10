@@ -78,8 +78,8 @@ bool HelloWorld::init()
     // create menu, it's an autorelease object
     auto menu = Menu::create(closeItem, NULL);
     menu->setPosition(Vec2::ZERO);
-    this->addChild(menu, 1);
-
+   // this->addChild(menu, 1);
+    
     /////////////////////////////
     // 3. add your codes below...
 
@@ -98,7 +98,7 @@ bool HelloWorld::init()
                                 origin.y + visibleSize.height - label->getContentSize().height));
 
         // add the label as a child to this layer
-        this->addChild(label, 1);
+       // this->addChild(label, 1);
     }
 
     // add "HelloWorld" splash screen"
@@ -115,16 +115,30 @@ bool HelloWorld::init()
         // add the sprite as a child to this layer
         this->addChild(sprite, 0);
     }
+    
+    GameHUD *hud = GameHUD::create();
+    hud->setupInteractions(this);
+    
+    this->addChild(hud,1);
+    
     return true;
 }
 
+void HelloWorld::onHUDItemClickedCallback(Ref *pSender) {
+    switch (((MenuItem*) pSender)->getTag()) {
+        case PAUSE_TAG:
+            CCLOG("PAUSE TAG");
+            break;
+            
+    }
+}
 
 void HelloWorld::menuCloseCallback(Ref* pSender)
 {
     //Close the cocos2d-x game scene and quit the application
     Director::getInstance()->end();
 
-    #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     exit(0);
 #endif
 
@@ -132,6 +146,4 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
 
     //EventCustom customEndEvent("game_scene_close_event");
     //_eventDispatcher->dispatchEvent(&customEndEvent);
-
-
 }

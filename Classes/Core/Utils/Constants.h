@@ -6,17 +6,20 @@
 //
 
 //GameHUD Constants
-#define PAUSE_TAG 0
+#define PAUSE_TAG 1
 #define RESUME_TAG 0
 
 //Interaction Constants
-#define PLAY_TAG 0
-#define TROPHY_TAG 0
-#define HELP_TAG 0
-#define CREDITS_TAG 0
-#define SHARE_TAG 0
-#define HOME_TAG 0
-#define BACK_TAG 0
+#define PLAY_TAG 1
+#define TROPHY_TAG 2
+#define HELP_TAG 3
+#define CREDITS_TAG 4
+#define SHARE_TAG 5
+#define HOME_TAG 6
+#define BACK_TAG 7
+
+//MovementConstants
+#define PLAYER_MAX_SPEED 10
 
 typedef enum {
     _RUNNING,
@@ -31,6 +34,3 @@ typedef enum {
     _BATTLE
 } GAME_MODE;
 
-typedef enum {
-    
-} GAME_;
