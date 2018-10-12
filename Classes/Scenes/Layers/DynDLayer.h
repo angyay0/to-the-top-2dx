@@ -15,9 +15,10 @@ USING_NS_CC;
 
 typedef enum {
     _PauseLayer,
-    _GOLayer,
-    _GMLayer,
-    _IMLayer
+    _WinLayer,
+    _GameOverLayer,
+    _GeneralMessageLayer,
+    _InteractiveMessageLayer
 } DDLayerType;
 
 class DynDLayer: public cocos2d::Layer {

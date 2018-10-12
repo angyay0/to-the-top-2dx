@@ -5,6 +5,9 @@
 //  Created by Eduardo Pérez on 09/10/18.
 //
 
+#ifndef Constants_h
+#define Constants_h
+
 //GameHUD Constants
 #define PAUSE_TAG 1
 #define RESUME_TAG 0
@@ -18,8 +21,14 @@
 #define HOME_TAG 6
 #define BACK_TAG 7
 
-//MovementConstants
-#define PLAYER_MAX_SPEED 10
+//Scenes and Layer and Child Levels
+#define PARALLAX_LAYER 0
+#define SCENE_OBJECTS_LAYER 1
+#define SCENE_DYNAMIC_OBJECT_LAYER 2
+#define PLAYABLE_OBJECTS_LAYER 3
+#define FX_LAYER 4
+#define HUD_LAYER 5
+
 
 typedef enum {
     _RUNNING,
@@ -34,3 +43,4 @@ typedef enum {
     _BATTLE
 } GAME_MODE;
 
+#endif

@@ -5,6 +5,9 @@
 //  Created by Eduardo Pérez on 05/10/18.
 //
 
+#ifndef Player_h
+#define Player_h
+
 #include "Character.h"
 #include "MovementProtocols.h"
 
@@ -27,3 +30,4 @@ public:
     void moveYAxis(float min,float max,float dt);
     void moveXAxis(float min,float max,float dt);
 };
+#endif
