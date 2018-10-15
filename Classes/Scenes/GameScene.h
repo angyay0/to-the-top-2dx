@@ -11,6 +11,7 @@
 #include "cocos2d.h"
 #include "ReactiveProtocols.h"
 #include "GameObject.h"
+#include "ParallaxLayer.h"
 #include "Player.h"
 #include "Constants.h"
 
@@ -18,6 +19,7 @@ USING_NS_CC;
 
 class GameScene: public Scene {
 private:
+    ParallaxLayer *parallax;
     Player *player;
     GameObject *boardObject;
     void update(float dt);

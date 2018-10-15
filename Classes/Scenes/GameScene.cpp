@@ -47,21 +47,47 @@ bool GameScene::createGameScene() {
     playerSpecialAttributes.resistance = 1.20;
     playerSpecialAttributes.health = 1.05;
     
+    GOPosition movementAccelInitialCero;
+    movementAccelInitialCero.xVal = 1.22;
+    movementAccelInitialCero.yVal = 0.22;
+    movementAccelInitialCero.zVal = 1.51;
+    
     //Board Instance and Configuration
     this->boardObject = new GameObject();
     this->boardObject->initWith("plank_base.png", boardAttributes);
     this->boardObject->getSprite()->setScale(scale);
     Size boardSize = this->boardObject->getSprite()->getContentSize();
-    boardSize.width = viewPort.width*0.9;
+    boardSize.width = viewPort.width*0.95;
     this->boardObject->getSprite()->setContentSize(boardSize);
     //Position board
     GOPosition boardPosition;
-    boardPosition.xVal = origin.x + boardOffset;
-    boardPosition.yVal = origin.y + this->boardObject->getSprite()->getContentSize().height + (boardOffset*2);
+    boardPosition.xVal = viewPort.width/2 + (viewPort.width - boardSize.width) + boardOffset;
+    boardPosition.yVal = origin.y + (boardSize.height*2);
     this->boardObject->setInitialPosition(boardPosition);
+    this->boardObject->movement = movementAccelInitialCero;
     
     //Add To View
     this->addChild(this->boardObject->getSprite(),PLAYABLE_OBJECTS_LAYER);
+    
+    //Parallax Layer
+    this->parallax = ParallaxLayer::create();
+    this->parallax->setupMovementFactor(0.05, 0.05, 2.0, 10.0, 50.0, viewPort.height, VERTICAL_MOVEMENT);
+    
+    //Parallax Nodes
+    Sprite *bg = Sprite::create("bg.jpg");
+    Sprite *bgp = Sprite::create("bg.jpg");
+    bg->setScale(viewPort.width/bg->getContentSize().width * 1.0f,
+                 viewPort.height/bg->getContentSize().height * 1.0f );
+    bgp->setScale(viewPort.width/bgp->getContentSize().width * 1.0f,
+                  viewPort.height/bgp->getContentSize().height * 1.0f );
+    bg->setPosition(origin.x + viewPort.width/2,origin.y + viewPort.height/2);
+    bgp->setPosition(origin.x + viewPort.width/2,bg->getPosition().y+viewPort.height);
+    bg->setTag(STANDALONE_PARALLAX_SPRITE_1);
+    bgp->setTag(STANDALONE_PARALLAX_SPRITE_2);
+    
+    this->addChild(bg, PARALLAX_LAYER);
+    this->addChild(bgp, PARALLAX_LAYER);
+    
     
     //Update and Accelerometer
     EventListenerAcceleration *listener = EventListenerAcceleration::create(CC_CALLBACK_2(GameScene::onAcceleration, this));
@@ -69,20 +95,19 @@ bool GameScene::createGameScene() {
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
     this->scheduleUpdate();
     
+    
     return true;
 }
 
 void GameScene::onAcceleration(Acceleration *acc, Event *event) {
-    Size winSize = Director::getInstance()->getVisibleSize();
-    
-    float KACCELMAXPOINTSPERSECY = winSize.height/2;
-    float KACCELMAXPOINTSPERSECX = winSize.width/2;
+    float KACCELMAXPOINTSPERSEC = 1;
+    float threshold = 0.2;
     double rollingX,rollingY,rollingZ;
     
-    float temp = acc->z;
-    acc->z = acc->x;
-    acc->x = acc->y;
-    acc->y = temp;
+   // float temp = acc->y;
+    //acc->x = -acc->x;
+   // acc->x = temp;
+    //acc->y = temp;
     
     rollingX = (acc->x * KFILTERINGFACTOR); //+ ( (1.0 - KFILTERINGFACTOR));
     rollingY = (acc->z * KFILTERINGFACTOR);
@@ -103,15 +128,37 @@ void GameScene::onAcceleration(Acceleration *acc, Event *event) {
     accelZFraction = accelZFraction < 0? accelZFraction*KADJUSTSIDE: accelZFraction;
     
     GOPosition accelMovement;
-    accelMovement.xVal = accelFraction;
-    accelMovement.yVal = accelYFraction;
+    accelMovement.xVal = accelFraction * KACCELMAXPOINTSPERSEC;
+    accelMovement.yVal = accelYFraction * KACCELMAXPOINTSPERSEC;
     accelMovement.zVal = accelZFraction;
     
-    //Send Acceleromenter data to Board
-    this->boardObject->movement = accelMovement;
+    GOPosition oldAccel = this->boardObject->movement;
     
+    if (accelMovement.xVal < (oldAccel.xVal-threshold) || accelMovement.xVal > (oldAccel.xVal+threshold)){
+        //Send Acceleromenter data to Board
+        this->boardObject->movement = accelMovement;
+        CCLOG("x: %.5f, y: %.5f, z: %.5f",accelMovement.xVal,accelMovement.yVal,accelMovement.zVal);
+    }
 }
 
 void GameScene::update(float dt) {
     this->boardObject->move();
+    
+    //MoveParallax Fake Sprites
+    Point bgPSpeed = this->parallax->getPointSpeed();
+    auto viewPort = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+    auto first = this->getChildByTag(STANDALONE_PARALLAX_SPRITE_1);
+    auto second = this->getChildByTag(STANDALONE_PARALLAX_SPRITE_2);
+    
+    first->setPosition( first->getPosition().x,first->getPosition().y - bgPSpeed.getLength() );
+    second->setPosition( second->getPosition().x,second->getPosition().y - bgPSpeed.getLength() );
+    
+    if( first->getPosition().y <= -(viewPort.height/2) ){
+        first->setPosition(first->getPosition().x, second->getPosition().y + viewPort.height);
+    }
+    
+    if( second->getPosition().y <= -(viewPort.height/2) ){
+        second->setPosition(second->getPosition().x,first->getPosition().y + viewPort.height);
+    }
 }

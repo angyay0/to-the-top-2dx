@@ -8,6 +8,7 @@
 
 #include "MainMenuScene.h"
 #include "HelpScene.h"
+#include "GameScene.h"
 
 Scene *MainMenuScene::createScene() {
     Scene *scene = Scene::create();
@@ -71,6 +72,7 @@ void MainMenuScene::onOptionSelectedCallback(Ref *pSender) {
     switch (((MenuItem*) pSender)->getTag()) {
         case PLAY_TAG:
             CCLOG("PLAY TAG");
+            Director::getInstance()->pushScene(GameScene::createScene());
             break;
         case HELP_TAG:
             CCLOG("HELP TAG");

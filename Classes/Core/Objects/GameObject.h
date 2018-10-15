@@ -53,6 +53,7 @@ struct GOSAttributes { //TBD
 
 class GameObject {
 protected:
+    bool movementFirstTime;
     Sprite *sprite;
     struct GOPosition position;
     struct GOAttributes attributes;
@@ -66,6 +67,7 @@ public:
     void setInitialPosition(struct GOPosition);
     void setSpecialAttributes(struct GOSAttributes);
     void setPosition(float x,float y);
+    void isFirstTimeMove(bool val);
     Sprite *getSprite();    
 };
 #endif

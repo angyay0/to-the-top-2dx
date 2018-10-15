@@ -58,3 +58,23 @@ void ParallaxLayer::updateLayer(){
         }
     }
 }
+
+void ParallaxLayer::setupMovementFactor(float bg_min_spd,float bg_max_spd,float min_factor_spd,float max_factor_spd,float factor,float distance,int orientation) {
+    this->bg_min_spd = bg_min_spd;
+    this->bg_max_spd = bg_max_spd;
+    this->min_factor_spd = min_factor_spd;
+    this->max_factor_spd = max_factor_spd;
+    this->pfactor = factor;
+    this->pdistance = distance;
+    this->orientation = orientation;
+    
+    point = cocos2d::Point(bg_min_spd,bg_max_spd);
+}
+
+cocos2d::Point ParallaxLayer::getPointSpeed(){
+    return point;
+}
+
+void ParallaxLayer::move(float dt) {
+    
+}

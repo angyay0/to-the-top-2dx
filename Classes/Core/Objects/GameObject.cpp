@@ -15,6 +15,7 @@ bool GameObject::initWith(const std::string &sprite_name, struct GOAttributes at
     
     auto polinfo = AutoPolygon::generatePolygon(sprite_name);
     this->sprite = Sprite::create(polinfo);
+    this->sprite->setAnchorPoint(Vec2(0.5,0.5));
     
     movement.xVal = 0.0f;
     movement.yVal = 0.0f;
@@ -47,10 +48,19 @@ void GameObject::setPosition(float x, float y) {
 }
 
 void GameObject::move() {
-    if (attributes.canMove) {
+    if (attributes.canMove & !movementFirstTime) {
         switch(attributes.movementType){
-            case 2://Rotation from Cero to 45 or -45 on same axis
-                float rotation = movement.xVal*1.20;
+            case 2://Rotation from Cero to 45 or -45 on same axis 1.22 is Cero
+                float rotation = (movement.xVal-1.22)*10.20;
+                if (rotation < 0){
+                    if (rotation < -45) {
+                        rotation = -45;
+                    }
+                } else {
+                    if (rotation > 45) {
+                        rotation = 45;
+                    }
+                }
                 this->sprite->setRotation(rotation);
                 break;
         }
@@ -59,4 +69,8 @@ void GameObject::move() {
 
 Sprite *GameObject::getSprite() {
     return this->sprite;
+}
+
+void GameObject::isFirstTimeMove(bool val) {
+    this->movementFirstTime = val;
 }
