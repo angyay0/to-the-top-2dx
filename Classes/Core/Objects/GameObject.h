@@ -18,10 +18,10 @@
 #define BONUS_OBJECT_TAG 3
 
 //Object Category Mask
-#define STATIC_OBJECT 0x00
-#define PLAYABLE_OBJECT 0x01
-#define MOVABLE_OBJECT 0X02
-#define INTERACTIVE_OBJECT 0X03
+#define STATIC_OBJECT 0x01
+#define PLAYABLE_OBJECT 0x02
+#define MOVABLE_OBJECT 0X03
+#define INTERACTIVE_OBJECT 0X04
 
 USING_NS_CC;
 
@@ -62,6 +62,9 @@ public:
     struct GOPosition movement;
     virtual void move();
     virtual bool initWith(const std::string &sprite_name,struct GOAttributes attributes);
+    virtual bool initWith(const std::string &sprite_name,struct GOAttributes attributes,float pBW,float pBH);
+    virtual bool initWith(SpriteFrame *frame,struct GOAttributes attributes,int physicsShape);
+    virtual void setExtras(float scale,bool drawAnchor,Size newSize,Vec2 anchor);
     struct GOAttributes getAttributes();
     struct GOSAttributes getSpecialAttributes();
     void setInitialPosition(struct GOPosition);

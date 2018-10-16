@@ -32,6 +32,9 @@
 #define FX_LAYER 4
 #define HUD_LAYER 5
 
+//Configurations Extra
+#define COW_DEBUG_MODE 1
+
 
 typedef enum {
     _RUNNING,
@@ -45,6 +48,22 @@ typedef enum {
     _2VS2MODE,
     _BATTLE
 } GAME_MODE;
+
+typedef enum {
+    _EASY,
+    _NORMAL,
+    _HARD,
+    _PRO,
+    _QUETZAL,
+    _JAGUAR
+} GAME_DIFFICULTY;
+
+struct PlayerHability {
+    bool preferLoseLives;
+    bool preferObtainPowerups;
+    int preferedBalance;
+    float healthInLevel;
+};
 
 struct GameSkin {
     std::string boardFile;

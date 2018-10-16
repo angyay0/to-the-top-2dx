@@ -6,3 +6,12 @@
 //
 
 #include "Toolkit.h"
+
+Toolkit *Toolkit::instance = NULL;
+
+Toolkit *Toolkit::getInstance(){
+    if (!instance){
+        instance = new Toolkit;
+    }    
+    return instance;
+}

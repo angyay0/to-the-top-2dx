@@ -7,13 +7,20 @@
 
 #include "GameScene.h"
 #include "MovementProtocols.h"
+#include "CollisionHandler.h"
+#include "GameHUD.h"
 
 Scene *GameScene::createScene(){
-    return GameScene::create();
+    auto scene =  GameScene::create();
+    if (COW_DEBUG_MODE) {
+        scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+        scene->getPhysicsWorld()->setGravity(Vec2(0,-980));
+    }
+    return scene;
 }
 
 bool GameScene::init() {
-    if(!Scene::init()) {
+    if(!Scene::initWithPhysics()) {
         return false;
     }
     return this->createGameScene();
@@ -47,27 +54,53 @@ bool GameScene::createGameScene() {
     playerSpecialAttributes.resistance = 1.20;
     playerSpecialAttributes.health = 1.05;
     
-    GOPosition movementAccelInitialCero;
-    movementAccelInitialCero.xVal = 1.22;
-    movementAccelInitialCero.yVal = 0.22;
-    movementAccelInitialCero.zVal = 1.51;
+    GOPosition movementAccelInitialZero;
+    movementAccelInitialZero.xVal = 1.22;
+    movementAccelInitialZero.yVal = 0.22;
+    movementAccelInitialZero.zVal = 1.51;
     
     //Board Instance and Configuration
     this->boardObject = new GameObject();
-    this->boardObject->initWith("plank_base.png", boardAttributes);
-    this->boardObject->getSprite()->setScale(scale);
+    this->boardObject->initWith("plank_base.png", boardAttributes, -1, 10);
+    //this->boardObject->getSprite()->setScale(scale);
     Size boardSize = this->boardObject->getSprite()->getContentSize();
     boardSize.width = viewPort.width*0.95;
-    this->boardObject->getSprite()->setContentSize(boardSize);
+    this->boardObject->setExtras(scale, true, boardSize, Vec2(0.43,0.5));
+    this->boardObject->getSprite()->getPhysicsBody()->setCollisionBitmask(PLAYER_EXTRA_COLLISION_MASK);
+    this->boardObject->getSprite()->getPhysicsBody()->setCategoryBitmask(PLAYABLE_OBJECT);
+    
     //Position board
     GOPosition boardPosition;
-    boardPosition.xVal = viewPort.width/2 + (viewPort.width - boardSize.width) + boardOffset;
+    boardPosition.xVal = origin.x + viewPort.width/2;
     boardPosition.yVal = origin.y + (boardSize.height*2);
     this->boardObject->setInitialPosition(boardPosition);
-    this->boardObject->movement = movementAccelInitialCero;
+    this->boardObject->movement = movementAccelInitialZero;
+    
+    //Player
+    auto spriteCache = SpriteFrameCache::getInstance();
+    spriteCache->addSpriteFramesWithFile("sprites.plist");
+    this->player = new Player();
+    this->player->initWith(spriteCache->getSpriteFrameByName("frame1.png"), playerAttributes,2);
+    this->player->setSpecialAttributes(playerSpecialAttributes);
+    this->player->setExtras(0.5, true, this->player->getSprite()->getContentSize(), Vec2(0.5,0.5));
+    this->player->setDefaults();
+    //Position Player    
+    GOPosition playerPosition;
+    playerPosition.xVal = origin.x + viewPort.width/2;
+    playerPosition.yVal = boardPosition.yVal + boardSize.height + (boardOffset*2);
+    this->player->setInitialPosition(playerPosition);
+    this->player->getSprite()->getPhysicsBody()->setCollisionBitmask(PLAYER_COLLISION_MASK);
+    this->player->getSprite()->getPhysicsBody()->setCategoryBitmask(PLAYABLE_OBJECT);
+    this->player->getSprite()->getPhysicsBody()->setGravityEnable(true);
+    this->player->getSprite()->getPhysicsBody()->setDynamic(true);
+    this->player->getSprite()->getPhysicsBody()->setMass(200);
+    
+    Size playerSize = this->player->getSprite()->getContentSize();
+    CCLOG("w: %.3f,h: %.3f",playerSize.width,playerSize.height);
     
     //Add To View
     this->addChild(this->boardObject->getSprite(),PLAYABLE_OBJECTS_LAYER);
+    this->addChild(this->player->getSprite(),PLAYABLE_OBJECTS_LAYER);
     
     //Parallax Layer
     this->parallax = ParallaxLayer::create();
@@ -88,13 +121,17 @@ bool GameScene::createGameScene() {
     this->addChild(bg, PARALLAX_LAYER);
     this->addChild(bgp, PARALLAX_LAYER);
     
+    //GameHUD
+    GameHUD *hud = GameHUD::create();
+    hud->setupInteractions(this);
+    
+    this->addChild(hud, HUD_LAYER);
     
     //Update and Accelerometer
     EventListenerAcceleration *listener = EventListenerAcceleration::create(CC_CALLBACK_2(GameScene::onAcceleration, this));
     Device::setAccelerometerEnabled(true);
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
     this->scheduleUpdate();
-    
     
     return true;
 }
@@ -137,22 +174,44 @@ void GameScene::onAcceleration(Acceleration *acc, Event *event) {
     if (accelMovement.xVal < (oldAccel.xVal-threshold) || accelMovement.xVal > (oldAccel.xVal+threshold)){
         //Send Acceleromenter data to Board
         this->boardObject->movement = accelMovement;
+        this->player->movement = accelMovement;
         CCLOG("x: %.5f, y: %.5f, z: %.5f",accelMovement.xVal,accelMovement.yVal,accelMovement.zVal);
     }
 }
 
+void GameScene::onHUDItemClickedCallback(cocos2d::Ref *pSender) {
+    switch (((MenuItem*) pSender)->getTag()) {
+        case PAUSE_TAG:
+            CCLOG("PAUSE TAG");
+            break;
+    }
+}
+
 void GameScene::update(float dt) {
+    auto viewPort = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+    
+    //Move Board
     this->boardObject->move();
+    
+    //Move Player depending On Board
+    auto playerChild = this->getChildByTag(PLAYER_TAG);
+   /* GOPosition accel = this->player->movement;
+    float pXVal = sqrtf(accel.xVal*accel.xVal);
+    float pYVal = sqrtf(accel.yVal*accel.yVal);
+    float newXPosition = playerChild->getPosition().x - pXVal;
+    float newYPosition = playerChild->getPosition().y - pYVal;*/
+    if (playerChild->getPosition().y < origin.y) {
+        playerChild->setPosition(Vec2(origin.x+viewPort.width/2,origin.y+viewPort.height/2));
+    }
     
     //MoveParallax Fake Sprites
     Point bgPSpeed = this->parallax->getPointSpeed();
-    auto viewPort = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
     auto first = this->getChildByTag(STANDALONE_PARALLAX_SPRITE_1);
     auto second = this->getChildByTag(STANDALONE_PARALLAX_SPRITE_2);
     
-    first->setPosition( first->getPosition().x,first->getPosition().y - bgPSpeed.getLength() );
-    second->setPosition( second->getPosition().x,second->getPosition().y - bgPSpeed.getLength() );
+    first->setPosition( first->getPosition().x,first->getPosition().y - sqrtf(0.5*0.5 + 0.5*0.5) );
+    second->setPosition( second->getPosition().x,second->getPosition().y - sqrtf(0.5*0.5 + 0.5*0.5) );
     
     if( first->getPosition().y <= -(viewPort.height/2) ){
         first->setPosition(first->getPosition().x, second->getPosition().y + viewPort.height);

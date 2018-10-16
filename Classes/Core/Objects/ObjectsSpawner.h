@@ -9,9 +9,12 @@
 #define ObjectsSpawner_h
 
 #include <stdio.h>
+#include "cocos2d.h"
 #include "Constants.h"
 #include "GameObject.h"
 #include "Player.h"
+
+USING_NS_CC;
 
 struct SpawnerControl {
 	bool isBoardSpawned = false;
@@ -29,8 +32,12 @@ private:
 	struct GameSkin skin;
 	struct SpawnerControl control;
 public:
-	static ObjectsSpawner *getInstance(struct GameSkin gameSkin){};
+	static ObjectsSpawner *getInstance(struct GameSkin gameSkin);
 	struct SpawnerControl isProcessCompleted();
-	GameObject *spawnBoardObject();
+	GameObject *spawnBoardObject(Size viewPort,Vec2 origin,float scale,float widthSizePerc,float offset,struct GOPosition initialZero);
+    Player *spawnPlayer(Size viewport,Vec2 origin,float scale,float offset,struct GOPosition initialMovement);
+    Vector<GameObject*> spawnLevel();
+    Vector<GameObject*> spawnPowerups();
+    Vector<GameObject*> spawnEnemies();
 };
 #endif

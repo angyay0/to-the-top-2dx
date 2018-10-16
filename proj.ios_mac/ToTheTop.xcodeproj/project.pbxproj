@@ -44,6 +44,9 @@
 		03EB278F216FB2AB00F9D56E /* standalone.png in Resources */ = {isa = PBXBuildFile; fileRef = 03EB277D216FB2AB00F9D56E /* standalone.png */; };
 		03EB2790216FB2AB00F9D56E /* trophy.png in Resources */ = {isa = PBXBuildFile; fileRef = 03EB277E216FB2AB00F9D56E /* trophy.png */; };
 		03EB2791216FB2AB00F9D56E /* web.png in Resources */ = {isa = PBXBuildFile; fileRef = 03EB277F216FB2AB00F9D56E /* web.png */; };
+		03EF09C32176259900A2FB7A /* block1.png in Resources */ = {isa = PBXBuildFile; fileRef = 03EF09C02176259800A2FB7A /* block1.png */; };
+		03EF09C42176259900A2FB7A /* spikes.png in Resources */ = {isa = PBXBuildFile; fileRef = 03EF09C12176259800A2FB7A /* spikes.png */; };
+		03EF09C52176259900A2FB7A /* block2.png in Resources */ = {isa = PBXBuildFile; fileRef = 03EF09C22176259900A2FB7A /* block2.png */; };
 		1A88B2641FC3D9C9005C14AE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A88B2631FC3D9C9005C14AE /* Images.xcassets */; };
 		1AC6FB30180E99EB004C840B /* libcocos2d iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FB07180E9839004C840B /* libcocos2d iOS.a */; };
 		1AF87B781F6F77F7007BE51C /* AppController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1AF87B481F6F77D6007BE51C /* AppController.mm */; };
@@ -158,6 +161,9 @@
 		03EB277D216FB2AB00F9D56E /* standalone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = standalone.png; sourceTree = "<group>"; };
 		03EB277E216FB2AB00F9D56E /* trophy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = trophy.png; sourceTree = "<group>"; };
 		03EB277F216FB2AB00F9D56E /* web.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = web.png; sourceTree = "<group>"; };
+		03EF09C02176259800A2FB7A /* block1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = block1.png; sourceTree = "<group>"; };
+		03EF09C12176259800A2FB7A /* spikes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spikes.png; sourceTree = "<group>"; };
+		03EF09C22176259900A2FB7A /* block2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = block2.png; sourceTree = "<group>"; };
 		1A88B2631FC3D9C9005C14AE /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		1AC6FAE5180E9839004C840B /* cocos2d_libs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cocos2d_libs.xcodeproj; path = ../cocos2d/build/cocos2d_libs.xcodeproj; sourceTree = "<group>"; };
 		1ACB3243164770DE00914215 /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = ../../cocos2dx/platform/third_party/ios/libraries/libcurl.a; sourceTree = "<group>"; };
@@ -304,6 +310,9 @@
 		037FD3B42171002200461E43 /* game */ = {
 			isa = PBXGroup;
 			children = (
+				03EF09C02176259800A2FB7A /* block1.png */,
+				03EF09C22176259900A2FB7A /* block2.png */,
+				03EF09C12176259800A2FB7A /* spikes.png */,
 				03B3BC8F217531480045D3CE /* bg.jpg */,
 				03B3BC8D2175312C0045D3CE /* plank_base.png */,
 				037FD3B9217105AC00461E43 /* player_sprites.png */,
@@ -587,14 +596,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				03EB2790216FB2AB00F9D56E /* trophy.png in Resources */,
+				03EF09C42176259900A2FB7A /* spikes.png in Resources */,
 				03B3BC90217531480045D3CE /* bg.jpg in Resources */,
 				037FD3BD217105AC00461E43 /* sprites.plist in Resources */,
+				03EF09C52176259900A2FB7A /* block2.png in Resources */,
 				03EB2782216FB2AB00F9D56E /* CloseSelected.png in Resources */,
 				03EB2786216FB2AB00F9D56E /* multiplay.png in Resources */,
 				03EB2785216FB2AB00F9D56E /* home.png in Resources */,
 				03EB278E216FB2AB00F9D56E /* smile.png in Resources */,
 				1A88B2641FC3D9C9005C14AE /* Images.xcassets in Resources */,
 				03B3BC8E2175312C0045D3CE /* plank_base.png in Resources */,
+				03EF09C32176259900A2FB7A /* block1.png in Resources */,
 				03EB2780216FB2AB00F9D56E /* back.png in Resources */,
 				03EB278B216FB2AB00F9D56E /* share.png in Resources */,
 				037FD3BC217105AC00461E43 /* player_sprites.png in Resources */,

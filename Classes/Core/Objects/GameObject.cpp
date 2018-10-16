@@ -7,21 +7,88 @@
 
 #include "cocos2d.h"
 #include "GameObject.h"
+#include "Constants.h"
 
 USING_NS_CC;
 
-bool GameObject::initWith(const std::string &sprite_name, struct GOAttributes attributes) {
+bool GameObject::initWith(const std::string &sprite_name,struct GOAttributes attributes) {
     this->attributes = attributes;
     
     auto polinfo = AutoPolygon::generatePolygon(sprite_name);
-    this->sprite = Sprite::create(polinfo);
-    this->sprite->setAnchorPoint(Vec2(0.5,0.5));
-    
+    sprite = Sprite::create(polinfo);
+    auto physicsBody = PhysicsBody::createEdgeBox(sprite->getContentSize());
+    physicsBody->setDynamic(false);
+    sprite->addComponent(physicsBody);
     movement.xVal = 0.0f;
     movement.yVal = 0.0f;
     movement.zVal = 0.0f;
     
     return true;
+}
+
+bool GameObject::initWith(const std::string &sprite_name,struct GOAttributes attributes,float pBW,float pBH) {
+    this->attributes = attributes;
+    
+    auto polinfo = AutoPolygon::generatePolygon(sprite_name);
+    sprite = Sprite::create(polinfo);
+    PhysicsBody *body;
+    
+    if (pBW<0) {
+        body = PhysicsBody::createEdgeBox(Size(sprite->getContentSize().width,pBH));
+        body->setPositionOffset(Vec2(0,pBH));
+    } else {
+        body = PhysicsBody::createEdgeBox(Size(pBW,pBH));
+    }
+    
+    body->setDynamic(false);
+    sprite->addComponent(body);
+    movement.xVal = 0.0f;
+    movement.yVal = 0.0f;
+    movement.zVal = 0.0f;
+    
+    return true;
+}
+
+bool GameObject::initWith(SpriteFrame *frame,struct GOAttributes attributes,int physicsShape) {
+    this->attributes = attributes;
+    
+    sprite = Sprite::createWithSpriteFrame(frame);
+    PhysicsBody *body;
+    
+    switch(physicsShape){
+        case 1://box
+            body = PhysicsBody::createEdgeBox(sprite->getContentSize());
+            break;
+        case 2://Circle
+            body = PhysicsBody::createCircle(sprite->getContentSize().width/2);
+            
+            break;
+            
+    }
+    
+    body->setDynamic(false);
+    sprite->addComponent(body);
+    sprite->setAnchorPoint(Vec2(0.5,0.5));
+    movement.xVal = 0.0f;
+    movement.yVal = 0.0f;
+    movement.zVal = 0.0f;
+    
+    return true;
+}
+
+void GameObject::setExtras(float scale, bool drawAnchor, Size newSize, Vec2 anchor){
+    sprite->setScale(scale);
+    
+    if (newSize.width > 0 && newSize.height > 0) {
+        sprite->setContentSize(newSize);
+        sprite->setAnchorPoint(anchor);
+    }
+    
+    if (drawAnchor) {
+        DrawNode *point = DrawNode::create();
+        point->drawDot(Point(newSize.width*sprite->getAnchorPoint().x,newSize.height*sprite->getAnchorPoint().y),2, Color4F(1.0,0.0,0.0,1.0));
+        sprite->addChild(point);
+    }
 }
 
 struct GOAttributes GameObject::getAttributes() {

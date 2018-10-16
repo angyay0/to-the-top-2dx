@@ -7,14 +7,13 @@
 
 #include "ObjectsSpawner.h"
 
-ObjectsSpawner *ObjectsSpaner::instance = NULL;
+ObjectsSpawner *ObjectsSpawner::instance = NULL;
 
-ObjectsSpawner *ObjectsSpawner::getInstance(struc GameSkin skin) {
+ObjectsSpawner *ObjectsSpawner::getInstance(struct GameSkin skin) {
     if (!instance) {
         instance = new ObjectsSpawner;
     }
-
-    this->skin = skin;
-
+    instance->skin = skin;
+    
     return instance;
 }

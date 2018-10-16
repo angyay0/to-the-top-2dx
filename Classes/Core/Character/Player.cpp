@@ -24,6 +24,8 @@ void Player::setDefaults() {
     this->score = 0;
     this->lives = 3;
     this->distance = 0;
+    
+    this->sprite->setTag(PLAYER_TAG);
 }
 
 long Player::getScore() {

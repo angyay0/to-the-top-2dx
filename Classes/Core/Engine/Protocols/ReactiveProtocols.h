@@ -22,7 +22,7 @@ public:
 
 class GameObjectContainerProtocol {
 private:
-    cocos2d::Vector<GameObject*> gameObjects;
+    cocos2d::Vector<GameObject*> levelObjects;
 public:
     virtual void cleanGameObjects() = 0;
     virtual void createInitialGameObjects() = 0;

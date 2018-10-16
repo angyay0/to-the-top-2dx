@@ -17,7 +17,7 @@
 
 USING_NS_CC;
 
-class GameScene: public Scene {
+class GameScene: public Scene,public GameHUDClickProtocol {
 private:
     ParallaxLayer *parallax;
     Player *player;
@@ -30,6 +30,7 @@ public:
     bool createGameScene();
     
     virtual void onAcceleration(Acceleration *acc, Event *event);
+    virtual void onHUDItemClickedCallback(cocos2d::Ref *pSender);
     
     CREATE_FUNC(GameScene);
 };
