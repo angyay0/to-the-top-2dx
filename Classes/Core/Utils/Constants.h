@@ -8,6 +8,9 @@
 #ifndef Constants_h
 #define Constants_h
 
+#include <stdio.h>
+#include <string>
+
 //GameHUD Constants
 #define PAUSE_TAG 1
 #define RESUME_TAG 0
@@ -42,5 +45,22 @@ typedef enum {
     _2VS2MODE,
     _BATTLE
 } GAME_MODE;
+
+struct GameSkin {
+    std::string boardFile;
+    std::string playerFile;
+    std::string blockBaseFile;
+    std::string blockLowFile;
+    std::string blockMidFile;
+    std::string blockAdvFile;
+    std::string blockProFile;
+    std::string powerupsFile;
+    std::string invadersFile;
+    std::string uiItemsFile;
+};
+
+struct GameSound {
+
+};
 
 #endif
