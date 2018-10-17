@@ -63,10 +63,12 @@ public:
     virtual void move();
     virtual bool initWith(const std::string &sprite_name,struct GOAttributes attributes);
     virtual bool initWith(const std::string &sprite_name,struct GOAttributes attributes,float pBW,float pBH);
+    virtual bool initWith(SpriteFrame *frame,struct GOAttributes attributes,float pBW,float pBH);
     virtual bool initWith(SpriteFrame *frame,struct GOAttributes attributes,int physicsShape);
     virtual void setExtras(float scale,bool drawAnchor,Size newSize,Vec2 anchor);
     struct GOAttributes getAttributes();
     struct GOSAttributes getSpecialAttributes();
+    struct GOPosition getPosition();
     void setInitialPosition(struct GOPosition);
     void setSpecialAttributes(struct GOSAttributes);
     void setPosition(float x,float y);

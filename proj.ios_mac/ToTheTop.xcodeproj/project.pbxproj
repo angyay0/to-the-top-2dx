@@ -22,8 +22,10 @@
 		03619DCC216E94860053F8B8 /* DynDLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 03619DCA216E94860053F8B8 /* DynDLayer.cpp */; };
 		03664A6C216FF1EB009307DD /* GameScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 03664A6A216FF1EB009307DD /* GameScene.cpp */; };
 		03664A71216FF2DB009307DD /* CollisionHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 03664A6F216FF2DB009307DD /* CollisionHandler.cpp */; };
+		0374E8292177AE6300896A95 /* sprites.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0374E8272177AE6300896A95 /* sprites.plist */; };
+		0374E82A2177AE6300896A95 /* sprites.png in Resources */ = {isa = PBXBuildFile; fileRef = 0374E8282177AE6300896A95 /* sprites.png */; };
 		037FD3BC217105AC00461E43 /* player_sprites.png in Resources */ = {isa = PBXBuildFile; fileRef = 037FD3B9217105AC00461E43 /* player_sprites.png */; };
-		037FD3BD217105AC00461E43 /* sprites.plist in Resources */ = {isa = PBXBuildFile; fileRef = 037FD3BA217105AC00461E43 /* sprites.plist */; };
+		037FD3BD217105AC00461E43 /* player-sprites.plist in Resources */ = {isa = PBXBuildFile; fileRef = 037FD3BA217105AC00461E43 /* player-sprites.plist */; };
 		03B3BC8E2175312C0045D3CE /* plank_base.png in Resources */ = {isa = PBXBuildFile; fileRef = 03B3BC8D2175312C0045D3CE /* plank_base.png */; };
 		03B3BC90217531480045D3CE /* bg.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 03B3BC8F217531480045D3CE /* bg.jpg */; };
 		03EB2780216FB2AB00F9D56E /* back.png in Resources */ = {isa = PBXBuildFile; fileRef = 03EB276E216FB2AB00F9D56E /* back.png */; };
@@ -137,9 +139,11 @@
 		03664A6B216FF1EB009307DD /* GameScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameScene.h; sourceTree = "<group>"; };
 		03664A6F216FF2DB009307DD /* CollisionHandler.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CollisionHandler.cpp; sourceTree = "<group>"; };
 		03664A70216FF2DB009307DD /* CollisionHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollisionHandler.h; sourceTree = "<group>"; };
+		0374E8272177AE6300896A95 /* sprites.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = sprites.plist; sourceTree = "<group>"; };
+		0374E8282177AE6300896A95 /* sprites.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sprites.png; sourceTree = "<group>"; };
 		0379377C216D4776005A330B /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		037FD3B9217105AC00461E43 /* player_sprites.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = player_sprites.png; sourceTree = "<group>"; };
-		037FD3BA217105AC00461E43 /* sprites.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = sprites.plist; sourceTree = "<group>"; };
+		037FD3BA217105AC00461E43 /* player-sprites.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "player-sprites.plist"; sourceTree = "<group>"; };
 		03B3BC8D2175312C0045D3CE /* plank_base.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = plank_base.png; sourceTree = "<group>"; };
 		03B3BC8F217531480045D3CE /* bg.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg.jpg; sourceTree = "<group>"; };
 		03E75F5B216E38B800ED1EBC /* MovementProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MovementProtocols.h; sourceTree = "<group>"; };
@@ -307,16 +311,26 @@
 			path = Objects;
 			sourceTree = "<group>";
 		};
+		0374E8242177AE4700896A95 /* basic_skin */ = {
+			isa = PBXGroup;
+			children = (
+				0374E8272177AE6300896A95 /* sprites.plist */,
+				0374E8282177AE6300896A95 /* sprites.png */,
+			);
+			path = basic_skin;
+			sourceTree = "<group>";
+		};
 		037FD3B42171002200461E43 /* game */ = {
 			isa = PBXGroup;
 			children = (
+				0374E8242177AE4700896A95 /* basic_skin */,
 				03EF09C02176259800A2FB7A /* block1.png */,
 				03EF09C22176259900A2FB7A /* block2.png */,
 				03EF09C12176259800A2FB7A /* spikes.png */,
 				03B3BC8F217531480045D3CE /* bg.jpg */,
 				03B3BC8D2175312C0045D3CE /* plank_base.png */,
 				037FD3B9217105AC00461E43 /* player_sprites.png */,
-				037FD3BA217105AC00461E43 /* sprites.plist */,
+				037FD3BA217105AC00461E43 /* player-sprites.plist */,
 			);
 			path = game;
 			sourceTree = "<group>";
@@ -598,11 +612,12 @@
 				03EB2790216FB2AB00F9D56E /* trophy.png in Resources */,
 				03EF09C42176259900A2FB7A /* spikes.png in Resources */,
 				03B3BC90217531480045D3CE /* bg.jpg in Resources */,
-				037FD3BD217105AC00461E43 /* sprites.plist in Resources */,
+				037FD3BD217105AC00461E43 /* player-sprites.plist in Resources */,
 				03EF09C52176259900A2FB7A /* block2.png in Resources */,
 				03EB2782216FB2AB00F9D56E /* CloseSelected.png in Resources */,
 				03EB2786216FB2AB00F9D56E /* multiplay.png in Resources */,
 				03EB2785216FB2AB00F9D56E /* home.png in Resources */,
+				0374E82A2177AE6300896A95 /* sprites.png in Resources */,
 				03EB278E216FB2AB00F9D56E /* smile.png in Resources */,
 				1A88B2641FC3D9C9005C14AE /* Images.xcassets in Resources */,
 				03B3BC8E2175312C0045D3CE /* plank_base.png in Resources */,
@@ -614,6 +629,7 @@
 				03EB278D216FB2AB00F9D56E /* sleep.png in Resources */,
 				3EACC98F19EE6D4300EB3C5E /* res in Resources */,
 				03EB2784216FB2AB00F9D56E /* help.png in Resources */,
+				0374E8292177AE6300896A95 /* sprites.plist in Resources */,
 				03EB2787216FB2AB00F9D56E /* next.png in Resources */,
 				03EB2789216FB2AB00F9D56E /* play.png in Resources */,
 				03EB278C216FB2AB00F9D56E /* sharefb.png in Resources */,

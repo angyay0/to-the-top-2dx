@@ -17,7 +17,7 @@
 
 USING_NS_CC;
 
-class GameScene: public Scene,public GameHUDClickProtocol {
+class GameScene: public Scene,public GameHUDClickProtocol{
 private:
     ParallaxLayer *parallax;
     Player *player;

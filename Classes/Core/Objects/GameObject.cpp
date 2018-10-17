@@ -49,6 +49,28 @@ bool GameObject::initWith(const std::string &sprite_name,struct GOAttributes att
     return true;
 }
 
+bool GameObject::initWith(SpriteFrame *frame,struct GOAttributes attributes,float pBW,float pBH) {
+    this->attributes = attributes;
+    
+    sprite = Sprite::createWithSpriteFrame(frame);
+    PhysicsBody *body;
+    
+    if (pBW<0) {
+        body = PhysicsBody::createEdgeBox(Size(sprite->getContentSize().width,pBH));
+        body->setPositionOffset(Vec2(0,sprite->getContentSize().height/2-pBH));
+    } else {
+        body = PhysicsBody::createEdgeBox(Size(pBW,pBH));
+    }
+    
+    body->setDynamic(false);
+    sprite->addComponent(body);
+    movement.xVal = 0.0f;
+    movement.yVal = 0.0f;
+    movement.zVal = 0.0f;
+    
+    return true;
+}
+
 bool GameObject::initWith(SpriteFrame *frame,struct GOAttributes attributes,int physicsShape) {
     this->attributes = attributes;
     
@@ -61,7 +83,9 @@ bool GameObject::initWith(SpriteFrame *frame,struct GOAttributes attributes,int 
             break;
         case 2://Circle
             body = PhysicsBody::createCircle(sprite->getContentSize().width/2);
-            
+            break;
+        case 3://Triangles->TODO
+            body = PhysicsBody::createEdgeBox(sprite->getContentSize());
             break;
             
     }
@@ -97,6 +121,10 @@ struct GOAttributes GameObject::getAttributes() {
 
 struct GOSAttributes GameObject::getSpecialAttributes() {
     return this->specialAttributes;
+}
+
+struct GOPosition GameObject::getPosition() {
+    return this->position;
 }
 
 void GameObject::setInitialPosition(struct GOPosition position) {

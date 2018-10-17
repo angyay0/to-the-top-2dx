@@ -21,6 +21,7 @@ struct SpawnerControl {
 	bool isPlayerSpawned = false;
 	bool isLevelMapped = false;
 	bool isLevelCreated = false;
+    bool drawAnchor = true;//default activated
 };
 
 class ObjectsSpawner {
@@ -31,11 +32,16 @@ private:
 	static ObjectsSpawner *instance;
 	struct GameSkin skin;
 	struct SpawnerControl control;
+    struct GOPosition zero;
+    Size viewPort;
+    Vec2 viewOrigin;
+    float scale;
 public:
-	static ObjectsSpawner *getInstance(struct GameSkin gameSkin);
+	static ObjectsSpawner *getInstance(struct GameSkin gameSkin,Size viewPort,Vec2 origin,float scale);
+    static ObjectsSpawner *getInstance();
 	struct SpawnerControl isProcessCompleted();
-	GameObject *spawnBoardObject(Size viewPort,Vec2 origin,float scale,float widthSizePerc,float offset,struct GOPosition initialZero);
-    Player *spawnPlayer(Size viewport,Vec2 origin,float scale,float offset,struct GOPosition initialMovement);
+	GameObject *spawnBoardObject();
+    Player *spawnPlayer();
     Vector<GameObject*> spawnLevel();
     Vector<GameObject*> spawnPowerups();
     Vector<GameObject*> spawnEnemies();

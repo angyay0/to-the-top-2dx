@@ -21,10 +21,10 @@ public:
 };
 
 class GameObjectContainerProtocol {
-private:
+protected:
     cocos2d::Vector<GameObject*> levelObjects;
-public:
+/*public:
     virtual void cleanGameObjects() = 0;
-    virtual void createInitialGameObjects() = 0;
+    virtual void createInitialGameObjects() = 0;*/
 };
 #endif /* ControlProtocols_h */

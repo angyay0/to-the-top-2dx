@@ -66,20 +66,13 @@ struct PlayerHability {
 };
 
 struct GameSkin {
-    std::string boardFile;
-    std::string playerFile;
-    std::string blockBaseFile;
-    std::string blockLowFile;
-    std::string blockMidFile;
-    std::string blockAdvFile;
-    std::string blockProFile;
-    std::string powerupsFile;
-    std::string invadersFile;
-    std::string uiItemsFile;
+    std::string spritesFile;
+    std::string parallaxFile;
 };
 
 struct GameSound {
-
+    std::string menuMusic;
+    std::string gameMusic;
 };
 
 #endif

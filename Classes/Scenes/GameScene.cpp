@@ -4,17 +4,19 @@
 //
 //  Created by Eduardo Pérez on 11/10/18.
 //
+// Base Block 96x946
 
 #include "GameScene.h"
 #include "MovementProtocols.h"
 #include "CollisionHandler.h"
+#include "ObjectsSpawner.h"
 #include "GameHUD.h"
 
 Scene *GameScene::createScene(){
     auto scene =  GameScene::create();
     if (COW_DEBUG_MODE) {
         scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
-        scene->getPhysicsWorld()->setGravity(Vec2(0,-980));
+        scene->getPhysicsWorld()->setGravity(Vec2(0,-98));
     }
     return scene;
 }
@@ -30,14 +32,19 @@ bool GameScene::createGameScene() {
     Size viewPort = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     float scale = Director::getInstance()->getContentScaleFactor() / 2.0;
-    
     float boardOffset = 10;//Offset for left, rigth and bottom
+    
+    GameSkin skin;
+    skin.spritesFile = "sprites.plist";
+    ObjectsSpawner *spawner = ObjectsSpawner::getInstance(skin,viewPort,origin,scale);
+    
+    /*
     
     GOAttributes boardAttributes;
     boardAttributes.name = "Board";
     boardAttributes.isCollidable = true;
     boardAttributes.canMove = true;
-    boardAttributes.movementType = 2;
+    boardAttributes.movementType = 2;*/
     
     GOAttributes playerAttributes;
     playerAttributes.name = "Ball";
@@ -53,7 +60,7 @@ bool GameScene::createGameScene() {
     playerSpecialAttributes.materialType = 1;
     playerSpecialAttributes.resistance = 1.20;
     playerSpecialAttributes.health = 1.05;
-    
+    /*
     GOPosition movementAccelInitialZero;
     movementAccelInitialZero.xVal = 1.22;
     movementAccelInitialZero.yVal = 0.22;
@@ -74,26 +81,38 @@ bool GameScene::createGameScene() {
     boardPosition.xVal = origin.x + viewPort.width/2;
     boardPosition.yVal = origin.y + (boardSize.height*2);
     this->boardObject->setInitialPosition(boardPosition);
-    this->boardObject->movement = movementAccelInitialZero;
+    this->boardObject->movement = movementAccelInitialZero;*/
+    //Board
+    this->boardObject = spawner->spawnBoardObject();
     
     //Player
     auto spriteCache = SpriteFrameCache::getInstance();
-    spriteCache->addSpriteFramesWithFile("sprites.plist");
+    Vector<SpriteFrame*> spriteAnim;
+    spriteAnim.pushBack(spriteCache->getSpriteFrameByName("player1.png"));
+    spriteAnim.pushBack(spriteCache->getSpriteFrameByName("player2.png"));
+    spriteAnim.pushBack(spriteCache->getSpriteFrameByName("player3.png"));
+    Animation *anim = Animation::createWithSpriteFrames(spriteAnim, 0.08f);
+    
+    //spriteCache->addSpriteFramesWithFile("sprites.plist");*/
     this->player = new Player();
-    this->player->initWith(spriteCache->getSpriteFrameByName("frame1.png"), playerAttributes,2);
+    this->player->initWith(spriteCache->getSpriteFrameByName("player1.png"), playerAttributes,2);
     this->player->setSpecialAttributes(playerSpecialAttributes);
     this->player->setExtras(0.5, true, this->player->getSprite()->getContentSize(), Vec2(0.5,0.5));
     this->player->setDefaults();
-    //Position Player    
+    //Position Player
+    Size boardSize = this->boardObject->getSprite()->getContentSize();
+    GOPosition boardPosition = this->boardObject->getPosition();
     GOPosition playerPosition;
     playerPosition.xVal = origin.x + viewPort.width/2;
     playerPosition.yVal = boardPosition.yVal + boardSize.height + (boardOffset*2);
     this->player->setInitialPosition(playerPosition);
+    this->player->getSprite()->runAction(RepeatForever::create(Animate::create(anim)));
     this->player->getSprite()->getPhysicsBody()->setCollisionBitmask(PLAYER_COLLISION_MASK);
     this->player->getSprite()->getPhysicsBody()->setCategoryBitmask(PLAYABLE_OBJECT);
     this->player->getSprite()->getPhysicsBody()->setGravityEnable(true);
     this->player->getSprite()->getPhysicsBody()->setDynamic(true);
-    this->player->getSprite()->getPhysicsBody()->setMass(200);
+    this->player->getSprite()->getPhysicsBody()->setMass(100);
+    
     
     Size playerSize = this->player->getSprite()->getContentSize();
     CCLOG("w: %.3f,h: %.3f",playerSize.width,playerSize.height);
