@@ -14,9 +14,10 @@
 
 Scene *GameScene::createScene(){
     auto scene =  GameScene::create();
+    scene->getPhysicsWorld()->setGravity(Vec2(0,-980));
+    
     if (COW_DEBUG_MODE) {
         scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
-        scene->getPhysicsWorld()->setGravity(Vec2(0,-98));
     }
     return scene;
 }
@@ -37,16 +38,14 @@ bool GameScene::createGameScene() {
     GameSkin skin;
     skin.spritesFile = "sprites.plist";
     ObjectsSpawner *spawner = ObjectsSpawner::getInstance(skin,viewPort,origin,scale);
-    
     /*
-    
     GOAttributes boardAttributes;
     boardAttributes.name = "Board";
     boardAttributes.isCollidable = true;
     boardAttributes.canMove = true;
     boardAttributes.movementType = 2;*/
     
-    GOAttributes playerAttributes;
+   /* GOAttributes playerAttributes;
     playerAttributes.name = "Ball";
     playerAttributes.points = 0;
     playerAttributes.isAlive = true;
@@ -60,7 +59,7 @@ bool GameScene::createGameScene() {
     playerSpecialAttributes.materialType = 1;
     playerSpecialAttributes.resistance = 1.20;
     playerSpecialAttributes.health = 1.05;
-    /*
+    
     GOPosition movementAccelInitialZero;
     movementAccelInitialZero.xVal = 1.22;
     movementAccelInitialZero.yVal = 0.22;
@@ -84,16 +83,17 @@ bool GameScene::createGameScene() {
     this->boardObject->movement = movementAccelInitialZero;*/
     //Board
     this->boardObject = spawner->spawnBoardObject();
+    this->player = spawner->spawnPlayer(this->boardObject->getSprite()->getContentSize(), this->boardObject->getPosition(),(boardOffset*2));
     
     //Player
-    auto spriteCache = SpriteFrameCache::getInstance();
+   /* auto spriteCache = SpriteFrameCache::getInstance();
     Vector<SpriteFrame*> spriteAnim;
     spriteAnim.pushBack(spriteCache->getSpriteFrameByName("player1.png"));
     spriteAnim.pushBack(spriteCache->getSpriteFrameByName("player2.png"));
     spriteAnim.pushBack(spriteCache->getSpriteFrameByName("player3.png"));
     Animation *anim = Animation::createWithSpriteFrames(spriteAnim, 0.08f);
     
-    //spriteCache->addSpriteFramesWithFile("sprites.plist");*/
+    //spriteCache->addSpriteFramesWithFile("sprites.plist");
     this->player = new Player();
     this->player->initWith(spriteCache->getSpriteFrameByName("player1.png"), playerAttributes,2);
     this->player->setSpecialAttributes(playerSpecialAttributes);
@@ -113,13 +113,21 @@ bool GameScene::createGameScene() {
     this->player->getSprite()->getPhysicsBody()->setDynamic(true);
     this->player->getSprite()->getPhysicsBody()->setMass(100);
     
-    
     Size playerSize = this->player->getSprite()->getContentSize();
-    CCLOG("w: %.3f,h: %.3f",playerSize.width,playerSize.height);
+    CCLOG("w: %.3f,h: %.3f",playerSize.width,playerSize.height);*/
     
     //Add To View
     this->addChild(this->boardObject->getSprite(),PLAYABLE_OBJECTS_LAYER);
     this->addChild(this->player->getSprite(),PLAYABLE_OBJECTS_LAYER);
+    
+    //AddBoxes
+    auto cache = SpriteFrameCache::getInstance();
+    for(int i=0;i<8;i++) {
+        Sprite *sprite = Sprite::createWithSpriteFrame(cache->getSpriteFrameByName("block1.png"));
+        sprite->setPosition(origin.x + (sprite->getContentSize().width+boardOffset)*(i+1), this->player->getPosition().yVal);
+        
+        this->addChild(sprite, SCENE_OBJECTS_LAYER);
+    }
     
     //Parallax Layer
     this->parallax = ParallaxLayer::create();
@@ -219,10 +227,11 @@ void GameScene::update(float dt) {
     float pXVal = sqrtf(accel.xVal*accel.xVal);
     float pYVal = sqrtf(accel.yVal*accel.yVal);
     float newXPosition = playerChild->getPosition().x - pXVal;
-    float newYPosition = playerChild->getPosition().y - pYVal;*/
+    float newYPosition = playerChild->getPosition().y - pYVal;*/    
     if (playerChild->getPosition().y < origin.y) {
         playerChild->setPosition(Vec2(origin.x+viewPort.width/2,origin.y+viewPort.height/2));
     }
+    
     
     //MoveParallax Fake Sprites
     Point bgPSpeed = this->parallax->getPointSpeed();

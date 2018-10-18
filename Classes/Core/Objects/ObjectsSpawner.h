@@ -21,7 +21,7 @@ struct SpawnerControl {
 	bool isPlayerSpawned = false;
 	bool isLevelMapped = false;
 	bool isLevelCreated = false;
-    bool drawAnchor = true;//default activated
+    bool drawAnchor = COW_DEBUG_MODE?true:false;//default activated
 };
 
 class ObjectsSpawner {
@@ -41,9 +41,11 @@ public:
     static ObjectsSpawner *getInstance();
 	struct SpawnerControl isProcessCompleted();
 	GameObject *spawnBoardObject();
-    Player *spawnPlayer();
+    Player *spawnPlayer(Size boardSize,GOPosition boardPosition,float offset);
     Vector<GameObject*> spawnLevel();
     Vector<GameObject*> spawnPowerups();
     Vector<GameObject*> spawnEnemies();
+    void resetLevel();
+    void resetPlayer();
 };
 #endif

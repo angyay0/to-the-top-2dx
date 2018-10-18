@@ -19,6 +19,6 @@ private:
     static Toolkit *instance;
 public:
     static Toolkit *getInstance();
-    char getLevelMap(float level,GAME_DIFFICULTY dif,struct PlayerHability hab);
+    int** getLevelMap(float level,GAME_DIFFICULTY dif,struct PlayerHability hab);
 };
 #endif /* Toolkit_h */

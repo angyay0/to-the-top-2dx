@@ -32,8 +32,23 @@
 #define FX_LAYER 4
 #define HUD_LAYER 5
 
+//Data For Create Levels
+#define STGCL_ITEM_MASK 0x01
+#define BLOCK_ITEM_MASK 0x03
+#define SPACE_ITEM_MASK 0x02
+#define BONUS_ITEM_MASK 0x07
+#define SPIKE_ITEM_MASK 0x05
+#define MIDBLOCK_ITEM_MASK 0x04
+#define DECORATION_ITEM_MASK 0x0A
+#define COIN_ITEM_MASK 0x8
+#define POWUP_ITEM_MASK 0x9
+#define TRAMP_ITEM_MASK 0x06
+#define LEVEL_BASE_WIDTH 8
+#define LEVEL_BASE_HEIGHT 8
+
 //Configurations Extra
 #define COW_DEBUG_MODE 1
+
 
 
 typedef enum {
@@ -50,12 +65,12 @@ typedef enum {
 } GAME_MODE;
 
 typedef enum {
-    _EASY,
-    _NORMAL,
-    _HARD,
-    _PRO,
-    _QUETZAL,
-    _JAGUAR
+    _EASY = 0x01,
+    _NORMAL = 0x03,
+    _HARD = 0x09,
+    _PRO = 0x0E,
+    _QUETZAL = 0x13,
+    _JAGUAR = 0x1D
 } GAME_DIFFICULTY;
 
 struct PlayerHability {
