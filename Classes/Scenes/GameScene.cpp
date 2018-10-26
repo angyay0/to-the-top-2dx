@@ -10,6 +10,7 @@
 #include "MovementProtocols.h"
 #include "CollisionHandler.h"
 #include "ObjectsSpawner.h"
+#include "Toolkit.h"
 #include "GameHUD.h"
 
 Scene *GameScene::createScene(){
@@ -38,95 +39,52 @@ bool GameScene::createGameScene() {
     GameSkin skin;
     skin.spritesFile = "sprites.plist";
     ObjectsSpawner *spawner = ObjectsSpawner::getInstance(skin,viewPort,origin,scale);
-    /*
-    GOAttributes boardAttributes;
-    boardAttributes.name = "Board";
-    boardAttributes.isCollidable = true;
-    boardAttributes.canMove = true;
-    boardAttributes.movementType = 2;*/
+    SpriteFrameCache *cache = SpriteFrameCache::getInstance();
     
-   /* GOAttributes playerAttributes;
-    playerAttributes.name = "Ball";
-    playerAttributes.points = 0;
-    playerAttributes.isAlive = true;
-    playerAttributes.isPlayable = true;
-    playerAttributes.isCollidable = true;
-    playerAttributes.canInteract = true;
-    playerAttributes.canMove = true;
-    playerAttributes.hasSpecialAttributes = true;
-    
-    GOSAttributes playerSpecialAttributes;
-    playerSpecialAttributes.materialType = 1;
-    playerSpecialAttributes.resistance = 1.20;
-    playerSpecialAttributes.health = 1.05;
-    
-    GOPosition movementAccelInitialZero;
-    movementAccelInitialZero.xVal = 1.22;
-    movementAccelInitialZero.yVal = 0.22;
-    movementAccelInitialZero.zVal = 1.51;
-    
-    //Board Instance and Configuration
-    this->boardObject = new GameObject();
-    this->boardObject->initWith("plank_base.png", boardAttributes, -1, 10);
-    //this->boardObject->getSprite()->setScale(scale);
-    Size boardSize = this->boardObject->getSprite()->getContentSize();
-    boardSize.width = viewPort.width*0.95;
-    this->boardObject->setExtras(scale, true, boardSize, Vec2(0.43,0.5));
-    this->boardObject->getSprite()->getPhysicsBody()->setCollisionBitmask(PLAYER_EXTRA_COLLISION_MASK);
-    this->boardObject->getSprite()->getPhysicsBody()->setCategoryBitmask(PLAYABLE_OBJECT);
-    
-    //Position board
-    GOPosition boardPosition;
-    boardPosition.xVal = origin.x + viewPort.width/2;
-    boardPosition.yVal = origin.y + (boardSize.height*2);
-    this->boardObject->setInitialPosition(boardPosition);
-    this->boardObject->movement = movementAccelInitialZero;*/
     //Board
     this->boardObject = spawner->spawnBoardObject();
     this->player = spawner->spawnPlayer(this->boardObject->getSprite()->getContentSize(), this->boardObject->getPosition(),(boardOffset*2));
-    
-    //Player
-   /* auto spriteCache = SpriteFrameCache::getInstance();
-    Vector<SpriteFrame*> spriteAnim;
-    spriteAnim.pushBack(spriteCache->getSpriteFrameByName("player1.png"));
-    spriteAnim.pushBack(spriteCache->getSpriteFrameByName("player2.png"));
-    spriteAnim.pushBack(spriteCache->getSpriteFrameByName("player3.png"));
-    Animation *anim = Animation::createWithSpriteFrames(spriteAnim, 0.08f);
-    
-    //spriteCache->addSpriteFramesWithFile("sprites.plist");
-    this->player = new Player();
-    this->player->initWith(spriteCache->getSpriteFrameByName("player1.png"), playerAttributes,2);
-    this->player->setSpecialAttributes(playerSpecialAttributes);
-    this->player->setExtras(0.5, true, this->player->getSprite()->getContentSize(), Vec2(0.5,0.5));
-    this->player->setDefaults();
-    //Position Player
-    Size boardSize = this->boardObject->getSprite()->getContentSize();
-    GOPosition boardPosition = this->boardObject->getPosition();
-    GOPosition playerPosition;
-    playerPosition.xVal = origin.x + viewPort.width/2;
-    playerPosition.yVal = boardPosition.yVal + boardSize.height + (boardOffset*2);
-    this->player->setInitialPosition(playerPosition);
-    this->player->getSprite()->runAction(RepeatForever::create(Animate::create(anim)));
-    this->player->getSprite()->getPhysicsBody()->setCollisionBitmask(PLAYER_COLLISION_MASK);
-    this->player->getSprite()->getPhysicsBody()->setCategoryBitmask(PLAYABLE_OBJECT);
-    this->player->getSprite()->getPhysicsBody()->setGravityEnable(true);
-    this->player->getSprite()->getPhysicsBody()->setDynamic(true);
-    this->player->getSprite()->getPhysicsBody()->setMass(100);
-    
-    Size playerSize = this->player->getSprite()->getContentSize();
-    CCLOG("w: %.3f,h: %.3f",playerSize.width,playerSize.height);*/
     
     //Add To View
     this->addChild(this->boardObject->getSprite(),PLAYABLE_OBJECTS_LAYER);
     this->addChild(this->player->getSprite(),PLAYABLE_OBJECTS_LAYER);
     
-    //AddBoxes
-    auto cache = SpriteFrameCache::getInstance();
-    for(int i=0;i<8;i++) {
-        Sprite *sprite = Sprite::createWithSpriteFrame(cache->getSpriteFrameByName("block1.png"));
-        sprite->setPosition(origin.x + (sprite->getContentSize().width+boardOffset)*(i+1), this->player->getPosition().yVal);
-        
-        this->addChild(sprite, SCENE_OBJECTS_LAYER);
+    // Level Map
+    PlayerHability hab;
+    int** byteLevelMap = Toolkit::getInstance()->getLevelMap(1,GAME_DIFFICULTY::_EASY,hab);
+    //int spaces = Toolkit::getInstance()->countSpacesInMap(byteLevelMap);
+    int height = sizeof(byteLevelMap);
+    int count = 0;
+    GOPosition pos = this->player->getPosition();
+    pos.xVal = origin.x + boardOffset;
+    GOPosition newRefPos;
+    newRefPos.xVal = pos.xVal;
+    newRefPos.yVal = pos.yVal;
+    newRefPos.zVal = pos.zVal;
+    
+    Sprite **sprites = new Sprite*[2];
+    sprites[0] = Sprite::createWithSpriteFrame(cache->getSpriteFrameByName("block1.png"));
+    sprites[1] = Sprite::createWithSpriteFrame(cache->getSpriteFrameByName("bonusbox.png"));
+    PhysicsBody *body1 = PhysicsBody::createEdgeBox(sprites[0]->getContentSize());
+    PhysicsBody *body2 = PhysicsBody::createEdgeBox(sprites[1]->getContentSize());
+    body1->setDynamic(false); body2->setDynamic(false);
+    body1->setCollisionBitmask(OBJECT_COLLISION_MASK);
+    body2->setCollisionBitmask(OBJECT_COLLISION_MASK);
+    body1->setCategoryBitmask(STATIC_OBJECT);
+    body2->setCategoryBitmask(STATIC_OBJECT);
+    sprites[0]->addComponent(body1); sprites[1]->addComponent(body2);
+    
+    
+    for(int i=0;i<height;i++) {
+        for(int j=0;j<LEVEL_BASE_WIDTH;j++) {
+            int byteMap = byteLevelMap[i][j];
+            if (byteMap != SPACE_ITEM_MASK ) {
+                
+                count++;
+            }
+        }
+        newRefPos.xVal = boardOffset;
+        newRefPos.yVal = newRefPos.yVal + (boardOffset * 3.f);
     }
     
     //Parallax Layer

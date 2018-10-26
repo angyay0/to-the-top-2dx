@@ -40,6 +40,47 @@ int Toolkit::getElementPerSpot(int scape_spaces, bool canBeEnded) {
     return availableItems[item];
 }
 
+void Toolkit::threatNoSpacePath(int **levelMap, int height, int width) {
+    bool hasSpaceSpots = false;
+    int space1,space2;
+    
+    for(int i=0;i<height-1;i++) {
+        hasSpaceSpots = false;
+        
+        for(int j=0;j<width;j++){
+            if (levelMap[i][j]==SPACE_ITEM_MASK){ //At least one
+                hasSpaceSpots = true;
+                break;
+            }
+        }
+        
+        if (!hasSpaceSpots) {
+            do {
+                space1 = arc4random() % width;
+                space2 = arc4random() % width;
+            }while(space2 == space1);
+            
+            levelMap[i][space1] = SPACE_ITEM_MASK;
+            levelMap[i][space2] = SPACE_ITEM_MASK;
+        }
+    }
+}
+
+void Toolkit::threatNoWinPath(int **levelMap, int height, int width) {
+    bool hasWinSpace = false;
+    for(int i=0;i<width;i++) {
+        if (levelMap[height-1][i] == STGCL_ITEM_MASK) {
+            hasWinSpace = true;
+            break;
+        }
+    }
+    
+    if (!hasWinSpace) {
+        int item = arc4random() % width;
+        levelMap[height-1][item] = STGCL_ITEM_MASK;
+    }
+}
+
 int** Toolkit::getLevelMap(int level,GAME_DIFFICULTY dif,struct PlayerHability hab) {
     int** levelMap = 0;
     int scapeSpots = 0;
@@ -52,7 +93,7 @@ int** Toolkit::getLevelMap(int level,GAME_DIFFICULTY dif,struct PlayerHability h
     levelMap = new int*[height];
 
     //Level Core Generation
-    for(int h=0;h<height;h++) {
+    for(int h=0;h<height;h++) {
         levelMap[h] = new int[LEVEL_BASE_WIDTH];
         scapeSpots = this->getAvailableSpaces(h,height,level,dif);
         endSpot = (h==height-1);
@@ -72,43 +113,20 @@ int** Toolkit::getLevelMap(int level,GAME_DIFFICULTY dif,struct PlayerHability h
     return levelMap;
 }
 
-void Toolkit::threatNoSpacePath(int **levelMap, int height, int width) {
-    bool hasSpaceSpots = false;
-    int space1,space2;
-
-    for(int i=0;i<height-1;i++) {
-        hasSpaceSpots = false;
-
-        for(int j=0;j<width;j++){
-            if (levelMap[i][j]==SPACE_ITEM_MASK){ //At least one
-                hasSpaceSpots = true;
-                break;
+int Toolkit::countSpacesInMap(int** levelMap) {
+    int height = sizeof(levelMap);
+    int count = 0;
+    
+    for(int i=0;i<height;i++) {
+        for(int j=0;j<LEVEL_BASE_WIDTH;j++) {
+            int byteMap = levelMap[i][j];
+            if (byteMap != SPACE_ITEM_MASK ) {
+                count++;
             }
         }
-
-        if (!hasSpaceSpots) {
-            do {
-                space1 = arc4random() % width;
-                space2 = arc4random() % width;
-            }while(space2 == space1);
-
-            levelMap[i][space1] = SPACE_ITEM_MASK;
-            levelMap[i][space2] = SPACE_ITEM_MASK;
-        }
     }
+    
+    return count;
 }
 
-void Toolkit::threatNoWinPath(int **levelMap, int height, int width) {
-    bool hasWinSpace = false;
-    for(int i=0;i<width;i++) {
-        if (levelMap[height-1][i] == STGCL_ITEM_MASK) {
-            hasWinSpace = true;
-            break;
-        }
-    }
 
-    if (!hasWinSpace) {
-        int item = arc4random() % width;
-        levelMap[height-1][item] = STGCL_ITEM_MASK;
-    }
-}

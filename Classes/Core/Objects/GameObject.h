@@ -29,6 +29,12 @@ struct GOPosition {
     float xVal = 0;
     float yVal = 0;
     float zVal = 0;
+    
+   /* GOPosition(float x,float y,float z){
+        this->xVal = x;
+        this->yVal = y;
+        this->zVal = z;
+    }*/
 };
 
 struct GOAttributes {
@@ -61,6 +67,7 @@ protected:
 public:
     struct GOPosition movement;
     virtual void move();
+    virtual bool initWith(SpriteFrame *frame,struct GOAttributes attributes);
     virtual bool initWith(const std::string &sprite_name,struct GOAttributes attributes);
     virtual bool initWith(const std::string &sprite_name,struct GOAttributes attributes,float pBW,float pBH);
     virtual bool initWith(SpriteFrame *frame,struct GOAttributes attributes,float pBW,float pBH);
@@ -73,6 +80,8 @@ public:
     void setSpecialAttributes(struct GOSAttributes);
     void setPosition(float x,float y);
     void isFirstTimeMove(bool val);
-    Sprite *getSprite();    
+    Sprite *getSprite();
+    //Helper Functions
+    struct GOAttributes getBlockBaseAttributes();
 };
 #endif

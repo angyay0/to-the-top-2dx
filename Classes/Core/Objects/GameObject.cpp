@@ -11,6 +11,21 @@
 
 USING_NS_CC;
 
+bool GameObject::initWith(SpriteFrame *frame,struct GOAttributes attributes) {
+    this->attributes = attributes;
+    
+    sprite = Sprite::createWithSpriteFrame(frame);
+    PhysicsBody *body = PhysicsBody::createEdgeBox(sprite->getContentSize());
+    body->setDynamic(false);
+    sprite->addComponent(body);
+    
+    movement.xVal = 0.0f;
+    movement.yVal = 0.0f;
+    movement.zVal = 0.0f;
+    
+    return true;
+}
+
 bool GameObject::initWith(const std::string &sprite_name,struct GOAttributes attributes) {
     this->attributes = attributes;
     
@@ -169,3 +184,12 @@ Sprite *GameObject::getSprite() {
 void GameObject::isFirstTimeMove(bool val) {
     this->movementFirstTime = val;
 }
+
+GOAttributes GameObject::getBlockBaseAttributes() {
+    GOAttributes attributes;
+    attributes.points = 10;
+    attributes.isCollidable = true;
+    attributes.canProvidePoints = true;    
+    return attributes;
+}
+

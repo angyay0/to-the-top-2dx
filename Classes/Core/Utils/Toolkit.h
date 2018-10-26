@@ -26,5 +26,6 @@ private:
 public:
     static Toolkit *getInstance();
     int** getLevelMap(int level,GAME_DIFFICULTY dif,struct PlayerHability hab);
+    int countSpacesInMap(int** levelMap);
 };
 #endif /* Toolkit_h */
