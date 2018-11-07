@@ -18,6 +18,8 @@
 
 class ParallaxLayer: public cocos2d::ParallaxNode {
 private:
+    bool removeAfterRoll;
+    bool stopAtEndRoll;
     float bg_min_spd;
     float bg_max_spd;
     float min_factor_spd;
@@ -30,6 +32,7 @@ public:
     static ParallaxLayer *create();
     void updateLayer();
     void setupMovementFactor(float bg_min_spd,float bg_max_spd,float min_factor_spd,float max_factor_spd,float factor,float distance,int orientation);
+    void setupBehavior(bool remove,bool stop);
     void move(float dt);
     cocos2d::Point getPointSpeed();
 };

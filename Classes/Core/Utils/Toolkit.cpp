@@ -1,11 +1,12 @@
 //
 //  Toolkit.cpp
-//  ToTheTop-mobile
+//  ToTheTop
 //
 //  Created by Eduardo Pérez on 05/10/18.
 //
 
 #include "Toolkit.h"
+#include <math.h>
 
 Toolkit *Toolkit::instance = NULL;
 
@@ -40,7 +41,7 @@ int Toolkit::getElementPerSpot(int scape_spaces, bool canBeEnded) {
     return availableItems[item];
 }
 
-void Toolkit::threatNoSpacePath(int **levelMap, int height, int width) {
+int** Toolkit::threatNoSpacePath(int **levelMap, int height, int width) {
     bool hasSpaceSpots = false;
     int space1,space2;
     
@@ -64,12 +65,15 @@ void Toolkit::threatNoSpacePath(int **levelMap, int height, int width) {
             levelMap[i][space2] = SPACE_ITEM_MASK;
         }
     }
+    
+    return levelMap;
 }
 
-void Toolkit::threatNoWinPath(int **levelMap, int height, int width) {
+int** Toolkit::threatNoWinPath(int **levelMap, int height, int width) {
     bool hasWinSpace = false;
     for(int i=0;i<width;i++) {
-        if (levelMap[height-1][i] == STGCL_ITEM_MASK) {
+        int bit = levelMap[height-1][i];
+        if (bit == STGCL_ITEM_MASK) {
             hasWinSpace = true;
             break;
         }
@@ -79,6 +83,8 @@ void Toolkit::threatNoWinPath(int **levelMap, int height, int width) {
         int item = arc4random() % width;
         levelMap[height-1][item] = STGCL_ITEM_MASK;
     }
+    
+    return levelMap;
 }
 
 int** Toolkit::getLevelMap(int level,GAME_DIFFICULTY dif,struct PlayerHability hab) {
@@ -87,7 +93,8 @@ int** Toolkit::getLevelMap(int level,GAME_DIFFICULTY dif,struct PlayerHability h
     bool endSpot = false;
 
     //Calculate Height for the level
-    int height = LEVEL_BASE_HEIGHT;
+    int height = this->levelLength(LEVEL_BASE_HEIGHT, dif);
+    this->actualMapHeight = height;
 
     //Instantiate basic objects
     levelMap = new int*[height];
@@ -104,9 +111,11 @@ int** Toolkit::getLevelMap(int level,GAME_DIFFICULTY dif,struct PlayerHability h
             if (endSpot) endSpot = !(item==STGCL_ITEM_MASK);
 
             levelMap[h][w] = item;
+            //printf("%d ",item);
         }
+        //printf("\n");
     }
-
+    
     this->threatNoSpacePath(levelMap,height,LEVEL_BASE_WIDTH);
     this->threatNoWinPath(levelMap,height,LEVEL_BASE_WIDTH);
     
@@ -128,5 +137,14 @@ int Toolkit::countSpacesInMap(int** levelMap) {
     
     return count;
 }
+
+int Toolkit::levelLength(int base_height,GAME_DIFFICULTY dif) {
+    int adjust = ceil(base_height*dif/10);
+    int sizing = ((int)dif>(int)GAME_DIFFICULTY::_NORMAL)?floor(adjust%2):0;
+    
+    return  (base_height + adjust - sizing);
+}
+
+int Toolkit::getActualMapHeight() { return this->actualMapHeight; }
 
 

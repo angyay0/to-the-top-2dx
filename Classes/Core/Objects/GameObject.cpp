@@ -177,7 +177,7 @@ void GameObject::move() {
     }
 }
 
-Sprite *GameObject::getSprite() {
+Sprite* GameObject::getSprite() {
     return this->sprite;
 }
 

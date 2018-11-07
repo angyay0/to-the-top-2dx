@@ -24,6 +24,11 @@
 #define HOME_TAG 6
 #define BACK_TAG 7
 
+//Tags for Id in Scene
+#define PLAYER_TAG 100
+#define PLAYER_EXTRA_TAG 101
+#define HUD_TAG 102
+
 //Scenes and Layer and Child Levels
 #define PARALLAX_LAYER 0
 #define SCENE_OBJECTS_LAYER 1
@@ -43,8 +48,9 @@
 #define COIN_ITEM_MASK 0x8
 #define POWUP_ITEM_MASK 0x9
 #define TRAP_ITEM_MASK 0x06
-#define LEVEL_BASE_WIDTH 8
-#define LEVEL_BASE_HEIGHT 8
+
+#define LEVEL_BASE_WIDTH 9
+#define LEVEL_BASE_HEIGHT 9
 
 //Configurations Extra
 #define COW_DEBUG_MODE 1

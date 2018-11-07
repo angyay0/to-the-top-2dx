@@ -52,6 +52,9 @@ bool GameHUD::setupView() {
     this->addChild(this->scoreLabel);
     this->addChild(this->livesLabel);
     
+    //Configure Tag
+    this->setTag(HUD_TAG);
+    
     
     return true;
 }

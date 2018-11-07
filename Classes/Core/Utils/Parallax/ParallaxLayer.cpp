@@ -78,3 +78,8 @@ cocos2d::Point ParallaxLayer::getPointSpeed(){
 void ParallaxLayer::move(float dt) {
     
 }
+
+void ParallaxLayer::setupBehavior(bool remove, bool stop) {
+    this->removeAfterRoll = true;
+    this->stopAtEndRoll = true;
+}

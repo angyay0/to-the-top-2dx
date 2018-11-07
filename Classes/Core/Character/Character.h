@@ -9,6 +9,7 @@
 #define Character_h
 
 #include "GameObject.h"
+#include "Constants.h"
 #include <stdio.h>
 
 class Character:public GameObject {

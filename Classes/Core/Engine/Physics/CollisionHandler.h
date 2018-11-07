@@ -19,21 +19,6 @@
 
 USING_NS_CC;
 
-struct CollisionResults {
-    
-};
-
 class CollisionHandler {
-private:
-    CollisionHandler(){};
-    CollisionHandler(CollisionHandler const&){};
-    CollisionHandler& operator = (CollisionHandler const&){};
-    static CollisionHandler *instance;
-public:
-    static CollisionHandler *getInstance();
-    void checkCollisionForPlayer(Player *player,const Vector<GameObject*> objectsInScene);
-    void checkCollisionForObject(GameObject *mainObject,const Vector<GameObject*> objectsInScene);
-    void checkCollisionAndRemoveNodes(Sprite *mainObject,Layer *container,const Vector<GameObject*> objectsInScene);
 };
-
 #endif /* CollisionHandler_h */

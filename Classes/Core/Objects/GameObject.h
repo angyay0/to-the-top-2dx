@@ -11,12 +11,6 @@
 #include <stdio.h>
 #include "cocos2d.h"
 
-//Tags for GameObjects
-#define OBJECT_TAG 0
-#define PLAYER_TAG 1
-#define SPECIAL_OBJECT_TAG 2
-#define BONUS_OBJECT_TAG 3
-
 //Object Category Mask
 #define STATIC_OBJECT 0x01
 #define PLAYABLE_OBJECT 0x02

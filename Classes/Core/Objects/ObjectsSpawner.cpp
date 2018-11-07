@@ -56,7 +56,8 @@ GameObject *ObjectsSpawner::spawnBoardObject() {
         //Physics Configuration
         board->getSprite()->getPhysicsBody()->setCollisionBitmask(PLAYER_EXTRA_COLLISION_MASK);
         board->getSprite()->getPhysicsBody()->setCategoryBitmask(PLAYABLE_OBJECT);
-        board->getSprite()->getPhysicsBody()->setMass(500);
+        board->getSprite()->getPhysicsBody()->setMass(50);
+        board->getSprite()->setTag(PLAYER_EXTRA_TAG);
         board->setInitialPosition(boardPosition);
         board->movement = zero;
         
@@ -109,7 +110,8 @@ Player *ObjectsSpawner::spawnPlayer(Size boardSize,GOPosition boardPosition,floa
         player->getSprite()->getPhysicsBody()->setCategoryBitmask(PLAYABLE_OBJECT);
         player->getSprite()->getPhysicsBody()->setGravityEnable(true);
         player->getSprite()->getPhysicsBody()->setDynamic(true);
-        player->getSprite()->getPhysicsBody()->setMass(50);//TBD
+        player->getSprite()->getPhysicsBody()->setMass(100);//TBD
+        player->getSprite()->setTag(PLAYER_TAG);
         
         
         this->control.isPlayerSpawned = true;
@@ -119,64 +121,38 @@ Player *ObjectsSpawner::spawnPlayer(Size boardSize,GOPosition boardPosition,floa
     return nullptr;
 }
 
-GameObject **ObjectsSpawner::spawnLevel(int level,GAME_DIFFICULTY dif,PlayerHability hab,GOPosition refPos,float verticalOffset,float horizontalOffset) {
-    int** byteLevelMap = Toolkit::getInstance()->getLevelMap(level, dif, hab);
-    int spaces = Toolkit::getInstance()->countSpacesInMap(byteLevelMap);
-    int height = sizeof(byteLevelMap);
-    int count = 0;
-    
-    GOPosition newRefPos;
-    newRefPos.xVal = refPos.xVal;
-    newRefPos.yVal = refPos.yVal;
-    newRefPos.zVal = refPos.zVal;
-    
-    GameObject** levelMap = new GameObject*[(height*LEVEL_BASE_WIDTH)-spaces];
-    
-    for(int i=0;i<height;i++) {
-        for(int j=0;j<LEVEL_BASE_WIDTH;j++) {
-            int byteMap = byteLevelMap[i][j];
-            if (byteMap != SPACE_ITEM_MASK ) {
-                levelMap[count] = this->spawnMapItem(byteMap,newRefPos,horizontalOffset);
-                newRefPos = levelMap[count]->getPosition();
-                count++;
-            }
-        }
-        
-        newRefPos.xVal = horizontalOffset;
-        newRefPos.yVal = newRefPos.yVal + (verticalOffset * 3.f);
-    }
-    
-    return levelMap;
-}
-
-GameObject *ObjectsSpawner::spawnMapItem(int type,GOPosition refPosition,float offset) {
+GameObject* ObjectsSpawner::spawnMapObject(int type, GOPosition refPosition,float offset) {
     SpriteFrameCache *sprites = SpriteFrameCache::getInstance();
-    GameObject *block = new GameObject();
-    GOAttributes attributes;
-    GOPosition pos;
+    GameObject *object = new GameObject();
+    PhysicsBody *spBody;
     
     switch (type) {
         case BLOCK_ITEM_MASK:
-            block->initWith(sprites->getSpriteFrameByName("block1.png"),block->getBlockBaseAttributes());
-            //TODO
+            object->initWith(sprites->getSpriteFrameByName("block1.png"),object->getBlockBaseAttributes());
             break;
         case STGCL_ITEM_MASK:
-            block->initWith(sprites->getSpriteFrameByName("bonusbox.png"),block->getBlockBaseAttributes());
-            //TODO
+            object->initWith(sprites->getSpriteFrameByName("bonusbox.png"),object->getBlockBaseAttributes());
             break;
         case TRAP_ITEM_MASK:
-            //TODO
+            object->initWith(sprites->getSpriteFrameByName("spikes.png"),object->getBlockBaseAttributes());
             break;
         default:
-            //TODO
             break;
     }
     
-    pos.xVal = refPosition.xVal + block->getSprite()->getContentSize().width + offset;
-    pos.yVal = refPosition.yVal; pos.zVal = refPosition.zVal;
-    block->setInitialPosition(pos);
+    spBody = object->getSprite()->getPhysicsBody();
+    spBody->setCollisionBitmask(BLOCK_ITEM_MASK);
+    spBody->setCategoryBitmask(PLAYABLE_OBJECT);
     
-    return block;
+    GOPosition pos;
+    pos.xVal = refPosition.xVal + object->getSprite()->getContentSize().width + offset;
+    pos.yVal = refPosition.yVal; pos.zVal = refPosition.zVal;
+    
+    object->setInitialPosition(pos);
+   // object->getSprite()->setPhysicsBody(spBody);
+    object->getSprite()->setTag(type);
+    
+    return object;
 }
 
 void ObjectsSpawner::resetLevel() {

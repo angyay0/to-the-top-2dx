@@ -36,17 +36,14 @@ private:
     Size viewPort;
     Vec2 viewOrigin;
     float scale;
-    GameObject *spawnMapItem(int type,GOPosition refPosition,float offset);
 public:
 	static ObjectsSpawner *getInstance(struct GameSkin gameSkin,Size viewPort,Vec2 origin,float scale);
     static ObjectsSpawner *getInstance();
 	struct SpawnerControl isProcessCompleted();
-	GameObject *spawnBoardObject();//One
+    GameObject *spawnBoardObject();//One
+    GameObject *spawnMapObject(int type,GOPosition refPosition,float offset);//One
     Player *spawnPlayer(Size boardSize,GOPosition boardPosition,float offset);//One
-    GameObject **spawnLevel(int level,GAME_DIFFICULTY dif,PlayerHability hab,GOPosition refPos,float verticalOffset,float horizontalOffset);//Many
-    //Vector<GameObject*> spawnPowerups();
-    //Vector<GameObject*> spawnEnemies();
-    void resetLevel();
     void resetPlayer();
+    void resetLevel();
 };
 #endif
