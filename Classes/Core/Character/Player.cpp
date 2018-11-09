@@ -24,6 +24,26 @@ void Player::setDefaults() {
     this->score = 0;
     this->lives = 3;
     this->distance = 0;
+    this->currentDistance = 0;
+    this->currentScore = 0;
+    this->currentHealth = this->specialAttributes.health * this->specialAttributes.resistance;
+}
+
+void Player::resetLiveLose(){
+    this->currentScore = 0;
+    this->currentDistance = 0;
+    this->currentHealth = this->specialAttributes.health * this->specialAttributes.resistance;
+}
+
+void Player::calculateDamage(float damage){
+    currentHealth -= damage;
+    if (currentHealth <= 0) {
+        this->setLives(this->getLives()-1);
+    }
+}
+
+void Player::calculateScore(float score){
+    currentScore += score;
 }
 
 long Player::getScore() {

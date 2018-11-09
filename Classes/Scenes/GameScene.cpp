@@ -18,9 +18,6 @@ Scene *GameScene::createScene(){
     auto scene =  GameScene::create();
     scene->getPhysicsWorld()->setGravity(Vec2(0,-980));
     
-    if (COW_DEBUG_MODE) {
-        scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
-    }
     return scene;
 }
 
@@ -41,7 +38,7 @@ bool GameScene::createGameScene() {
     ObjectsSpawner::getInstance(skin,viewPort,origin,scale);
     
     //Create Level Objects
-    this->buildLevel();
+    this->buildLevel(false);
     
     //Accelerometer Event Handler
     EventListenerAcceleration *accelListener = EventListenerAcceleration::create(CC_CALLBACK_2(GameScene::onAcceleration, this));
@@ -59,13 +56,17 @@ bool GameScene::createGameScene() {
     return true;
 }
 
-void GameScene::buildLevel() {
+void GameScene::buildLevel(bool respawn) {
     Size viewPort = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     float boardOffset = 10;//Offset for left, rigth and bottom
     
+    this->isOnRespawnTask = true;
+    
     this->removeAllChildren();
+    
     ObjectsSpawner *spawner = ObjectsSpawner::getInstance();
+    spawner->resetLevel(); //Reinitialize GameCreator
     //Parallax Layer
     this->parallaxMap = ParallaxLayer::create();
     this->parallaxMap->setupMovementFactor(0.05, 0.05, 2.0, 10.0, 50.0, viewPort.height, VERTICAL_MOVEMENT);
@@ -86,9 +87,11 @@ void GameScene::buildLevel() {
     this->addChild(bg, PARALLAX_LAYER);
     this->addChild(bgp, PARALLAX_LAYER);
     
-    //Board
-    this->boardObject = spawner->spawnBoardObject();
-    this->player = spawner->spawnPlayer(this->boardObject->getSprite()->getContentSize(), this->boardObject->getPosition(),(boardOffset*2));
+    //if (!respawn) { //Just if is First Live Instantiate new, continue otherwise
+        //Board
+        this->boardObject = spawner->spawnBoardObject();
+        this->player = spawner->spawnPlayer(this->boardObject->getSprite()->getContentSize(), this->boardObject->getPosition(),(boardOffset*2),this->player,respawn);
+   // }
     
     //Add To View
     this->addChild(this->boardObject->getSprite(),PLAYABLE_OBJECTS_LAYER);
@@ -121,6 +124,8 @@ void GameScene::buildLevel() {
         newRefPos.xVal = origin.x ;
         newRefPos.yVal = newRefPos.yVal + 100.f;
     }
+    //Mark As Level Created
+    spawner->setLevelCreated(true);
     
     //GameHUD
     GameHUD *hud = GameHUD::create();
@@ -129,8 +134,11 @@ void GameScene::buildLevel() {
     
     this->addChild(hud, HUD_LAYER);
     
-    //Display Level Number
-    
+    if (COW_DEBUG_MODE) {
+        this->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+    }
+   
+    this->isOnRespawnTask = false;
 }
 
 void GameScene::displayView(int type) {
@@ -213,40 +221,48 @@ void GameScene::update(float dt) {
     auto viewPort = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     
-    //Move Board
-    this->boardObject->move();
-    
-    //Move Player depending On Board
-    auto playerChild = this->getChildByTag(PLAYER_TAG);
-    
-    if (playerChild->getPosition().y < origin.y) {
-        playerChild->setPosition(Vec2(origin.x+viewPort.width/2,origin.y+viewPort.height/2));
-        int lives = player->getLives();
-        lives--;
-        player->setLives(lives);
-        if (lives <= 0) {//Display GameOver
-            this->displayView(0);//Game Over Scene/View
-        }//Continue
+    if (!this->isOnRespawnTask){
+        //Move Board
+        this->boardObject->move();
+        
+        //Move Player depending On Board
+        auto playerChild = this->getChildByTag(PLAYER_TAG);
+        
+        if (playerChild->getPosition().y < origin.y) { //Falls and lose a live
+            int lives = player->getLives();
+            lives--;
+          
+            if (lives <= 0) {//Display GameOver
+                this->displayView(0);//Game Over Scene/View
+                CCLOG("Game OVer");
+            } else {//Continue
+                player->setLives(lives);
+                player->resetLiveLose();
+                player->setPosition(origin.x+viewPort.width/2,origin.y+viewPort.height/2);
+               // playerChild->setPosition(Vec2(origin.x+viewPort.width/2,origin.y+viewPort.height/2));
+                this->buildLevel(true);
+            }
+        }
+        
+        //Move Background
+        Point bgPSpeed = this->parallaxMap->getPointSpeed();
+        auto first = this->getChildByTag(STANDALONE_PARALLAX_SPRITE_1);
+        auto second = this->getChildByTag(STANDALONE_PARALLAX_SPRITE_2);
+        
+        first->setPosition( first->getPosition().x,first->getPosition().y - sqrtf(0.5*0.5 + 0.5*0.5) );
+        second->setPosition( second->getPosition().x,second->getPosition().y - sqrtf(0.5*0.5 + 0.5*0.5) );
+        
+        if( first->getPosition().y <= -(viewPort.height/2) ){
+            first->setPosition(first->getPosition().x, second->getPosition().y + viewPort.height);
+        }
+        
+        if( second->getPosition().y <= -(viewPort.height/2) ){
+            second->setPosition(second->getPosition().x,first->getPosition().y + viewPort.height);
+        }
+        
+        //Move Blocks Layer
+        this->moveSpritesBlock(dt);
     }
-    
-    //Move Background
-    Point bgPSpeed = this->parallaxMap->getPointSpeed();
-    auto first = this->getChildByTag(STANDALONE_PARALLAX_SPRITE_1);
-    auto second = this->getChildByTag(STANDALONE_PARALLAX_SPRITE_2);
-    
-    first->setPosition( first->getPosition().x,first->getPosition().y - sqrtf(0.5*0.5 + 0.5*0.5) );
-    second->setPosition( second->getPosition().x,second->getPosition().y - sqrtf(0.5*0.5 + 0.5*0.5) );
-    
-    if( first->getPosition().y <= -(viewPort.height/2) ){
-        first->setPosition(first->getPosition().x, second->getPosition().y + viewPort.height);
-    }
-    
-    if( second->getPosition().y <= -(viewPort.height/2) ){
-        second->setPosition(second->getPosition().x,first->getPosition().y + viewPort.height);
-    }
-    
-    //Move Blocks Layer
-    this->moveSpritesBlock(dt);
 }
 
 void GameScene::moveSpritesBlock(float dt) {
@@ -267,6 +283,20 @@ void GameScene::moveSpritesBlock(float dt) {
             if (pos.y < -50 ) { //Elimina el elemento si ya no se ve
                 this->removeChild(tmpSp);
             }
+        }
+    }
+}
+
+void GameScene::cleanLevelElements(bool respawn){
+    auto items = this->getChildren();//Fetching all elements
+    Node *tmpSp;
+    int tag = 0;
+    
+    for(int i=0;i<items.size();i++) { //Iten Cleaner Loop
+        tmpSp = items.at(i);
+        tag = tmpSp->getTag();
+        if (tag != PLAYER_TAG || tag != PLAYER_EXTRA_TAG) { //If isnt player sprites
+           this->removeChild(tmpSp);
         }
     }
 }

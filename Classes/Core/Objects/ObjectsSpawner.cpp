@@ -70,7 +70,7 @@ GameObject *ObjectsSpawner::spawnBoardObject() {
     return nullptr;
 }
 
-Player *ObjectsSpawner::spawnPlayer(Size boardSize,GOPosition boardPosition,float offset) {
+Player *ObjectsSpawner::spawnPlayer(Size boardSize,GOPosition boardPosition,float offset,Player *oldData,bool centered) {
     if(!this->control.isPlayerSpawned) {
         GOAttributes playerAttributes;
         playerAttributes.name = "Ball";
@@ -88,7 +88,7 @@ Player *ObjectsSpawner::spawnPlayer(Size boardSize,GOPosition boardPosition,floa
         playerSpecialAttributes.health = 1.05;
         
         GOPosition playerPosition;
-        playerPosition.xVal = this->viewOrigin.x + this->viewPort.width/2;
+        playerPosition.xVal = (!centered)?this->viewOrigin.x:(this->viewOrigin.x+this->viewPort.width/2);
         playerPosition.yVal = boardPosition.yVal + boardSize.height + offset;
         
         auto spriteCache = SpriteFrameCache::getInstance();
@@ -115,6 +115,11 @@ Player *ObjectsSpawner::spawnPlayer(Size boardSize,GOPosition boardPosition,floa
         player->getSprite()->getPhysicsBody()->setMass(100);//TBD
         player->getSprite()->setTag(PLAYER_TAG);
         
+        if (oldData != nullptr) { //It Means Copy all Data; Pending if more required
+            player->setLives(oldData->getLives());
+            player->setScore(oldData->getScore());
+            player->setDistance(oldData->getDistance());
+        }
         
         this->control.isPlayerSpawned = true;
         return player;
@@ -128,34 +133,41 @@ GameObject* ObjectsSpawner::spawnMapObject(int type, GOPosition refPosition,floa
     GameObject *object = new GameObject();
     PhysicsBody *spBody;
     
-    switch (type) {
-        case BLOCK_ITEM_MASK:
-            object->initWith(sprites->getSpriteFrameByName("block1.png"),object->getBlockBaseAttributes());
-            break;
-        case STGCL_ITEM_MASK:
-            object->initWith(sprites->getSpriteFrameByName("bonusbox.png"),object->getBlockBaseAttributes());
-            break;
-        case TRAP_ITEM_MASK:
-            object->initWith(sprites->getSpriteFrameByName("spikes.png"),object->getBlockBaseAttributes());
-            break;
-        default:
-            break;
+    if (!this->control.isLevelCreated){
+        switch (type) {
+            case BLOCK_ITEM_MASK:
+                object->initWith(sprites->getSpriteFrameByName("block1.png"),object->getBlockBaseAttributes());
+                break;
+            case STGCL_ITEM_MASK:
+                object->initWith(sprites->getSpriteFrameByName("bonusbox.png"),object->getBlockBaseAttributes());
+                break;
+            case TRAP_ITEM_MASK:
+                object->initWith(sprites->getSpriteFrameByName("spikes.png"),object->getBlockBaseAttributes());
+                break;
+            default:
+                break;
+        }
+        
+        spBody = object->getSprite()->getPhysicsBody();
+        spBody->setContactTestBitmask(BLOCK_ITEM_MASK);
+        spBody->setCollisionBitmask(BLOCK_ITEM_MASK);
+        spBody->setCategoryBitmask(PLAYABLE_OBJECT);
+        
+        GOPosition pos;
+        pos.xVal = refPosition.xVal + object->getSprite()->getContentSize().width + offset;
+        pos.yVal = refPosition.yVal; pos.zVal = refPosition.zVal;
+        
+        object->setInitialPosition(pos);
+       // object->getSprite()->setPhysicsBody(spBody);
+        object->getSprite()->setTag(type);
+        object->setExtras(1, this->control.drawAnchor, object->getSprite()->getContentSize(), Vec2(0.5,0.5));
     }
-    
-    spBody = object->getSprite()->getPhysicsBody();
-    spBody->setContactTestBitmask(BLOCK_ITEM_MASK);
-    spBody->setCollisionBitmask(BLOCK_ITEM_MASK);
-    spBody->setCategoryBitmask(PLAYABLE_OBJECT);
-    
-    GOPosition pos;
-    pos.xVal = refPosition.xVal + object->getSprite()->getContentSize().width + offset;
-    pos.yVal = refPosition.yVal; pos.zVal = refPosition.zVal;
-    
-    object->setInitialPosition(pos);
-   // object->getSprite()->setPhysicsBody(spBody);
-    object->getSprite()->setTag(type);
-    
     return object;
+}
+
+void ObjectsSpawner::setLevelCreated(bool value){
+    this->control.isLevelMapped = value;
+    this->control.isLevelCreated = value;
 }
 
 void ObjectsSpawner::resetLevel() {

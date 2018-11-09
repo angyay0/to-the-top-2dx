@@ -23,14 +23,17 @@ private:
     ParallaxLayer *parallaxMap;
     Player *player;
     GameObject *boardObject;
+    PlayerHability learnedHab;
     bool isGameOver;
     bool isPaused;
+    bool isOnRespawnTask;
     int level;
     
     //Functions
     void update(float dt);
-    void buildLevel();
+    void buildLevel(bool respawn);
     void moveSpritesBlock(float dt);
+    void cleanLevelElements(bool respawn);
     void solveCollisionFor(Node *player,Node *object);
     void displayView(int type);
 public:

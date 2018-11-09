@@ -13,15 +13,21 @@
 
 class Player: public Character, public SimpleMovementProtocol {
 private:
-    long score = 0;
-    int lives = 0;
-    long distance = 0;
-    long _runningDistance = 0;
+    float currentHealth;
+    long currentScore;
+    long currentDistance;
+    long score;
+    int lives;
+    long distance;
 public:
     void setScore(long score);
     void setLives(int lives);
     void setDistance(long distance);
     void setDefaults();
+    void resetLiveLose();
+    
+    void calculateDamage(float damage);
+    void calculateScore(float score);
     
     long getScore();
     long getDistance();
