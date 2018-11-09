@@ -54,6 +54,7 @@ GameObject *ObjectsSpawner::spawnBoardObject() {
         board->setExtras(1, this->control.drawAnchor, boardSize, Vec2(0.5,0.5));
         
         //Physics Configuration
+        board->getSprite()->getPhysicsBody()->setContactTestBitmask(PLAYER_EXTRA_COLLISION_MASK);
         board->getSprite()->getPhysicsBody()->setCollisionBitmask(PLAYER_EXTRA_COLLISION_MASK);
         board->getSprite()->getPhysicsBody()->setCategoryBitmask(PLAYABLE_OBJECT);
         board->getSprite()->getPhysicsBody()->setMass(50);
@@ -106,6 +107,7 @@ Player *ObjectsSpawner::spawnPlayer(Size boardSize,GOPosition boardPosition,floa
         player->setDefaults();
         
         //Physics Configuration
+        player->getSprite()->getPhysicsBody()->setContactTestBitmask(PLAYER_COLLISION_MASK);
         player->getSprite()->getPhysicsBody()->setCollisionBitmask(PLAYER_COLLISION_MASK);
         player->getSprite()->getPhysicsBody()->setCategoryBitmask(PLAYABLE_OBJECT);
         player->getSprite()->getPhysicsBody()->setGravityEnable(true);
@@ -141,6 +143,7 @@ GameObject* ObjectsSpawner::spawnMapObject(int type, GOPosition refPosition,floa
     }
     
     spBody = object->getSprite()->getPhysicsBody();
+    spBody->setContactTestBitmask(BLOCK_ITEM_MASK);
     spBody->setCollisionBitmask(BLOCK_ITEM_MASK);
     spBody->setCategoryBitmask(PLAYABLE_OBJECT);
     

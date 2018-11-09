@@ -96,7 +96,7 @@ void GameScene::buildLevel() {
     
     // Level Map
     PlayerHability hab;
-    int** byteLevelMap = Toolkit::getInstance()->getLevelMap(1,GAME_DIFFICULTY::_JAGUAR,hab);
+    int** byteLevelMap = Toolkit::getInstance()->getLevelMap(1,GAME_DIFFICULTY::_NORMAL,hab);
     int height = Toolkit::getInstance()->getActualMapHeight();
     
     GOPosition pos = this->player->getPosition();
@@ -128,6 +128,9 @@ void GameScene::buildLevel() {
     hud->setupPlayer(player);
     
     this->addChild(hud, HUD_LAYER);
+    
+    //Display Level Number
+    
 }
 
 void GameScene::displayView(int type) {

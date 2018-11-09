@@ -56,7 +56,6 @@
 #define COW_DEBUG_MODE 1
 
 
-
 typedef enum {
     _RUNNING,
     _PAUSED,

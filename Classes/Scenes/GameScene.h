@@ -23,8 +23,10 @@ private:
     ParallaxLayer *parallaxMap;
     Player *player;
     GameObject *boardObject;
-    bool isPaused;
     bool isGameOver;
+    bool isPaused;
+    int level;
+    
     //Functions
     void update(float dt);
     void buildLevel();
