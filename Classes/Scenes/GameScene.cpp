@@ -11,7 +11,6 @@
 #include "CollisionHandler.h"
 #include "ObjectsSpawner.h"
 #include "Toolkit.h"
-#include "GameHUD.h"
 
 //Constructor Section
 Scene *GameScene::createScene(){
@@ -67,10 +66,6 @@ void GameScene::buildLevel(bool respawn) {
     
     ObjectsSpawner *spawner = ObjectsSpawner::getInstance();
     spawner->resetLevel(); //Reinitialize GameCreator
-    //Parallax Layer
-    this->parallaxMap = ParallaxLayer::create();
-    this->parallaxMap->setupMovementFactor(0.05, 0.05, 2.0, 10.0, 50.0, viewPort.height, VERTICAL_MOVEMENT);
-    this->parallaxMap->setupBehavior(false,true);
     
     //Parallax Nodes Background
     Sprite *bg = Sprite::create("bg.jpg");
@@ -90,7 +85,7 @@ void GameScene::buildLevel(bool respawn) {
     //if (!respawn) { //Just if is First Live Instantiate new, continue otherwise
         //Board
         this->boardObject = spawner->spawnBoardObject();
-        this->player = spawner->spawnPlayer(this->boardObject->getSprite()->getContentSize(), this->boardObject->getPosition(),(boardOffset*2),this->player,respawn);
+        this->player = spawner->spawnPlayer(this->boardObject->getSprite()->getContentSize(), this->boardObject->getPosition(),(boardOffset*2),this->player,true);
    // }
     
     //Add To View
@@ -128,7 +123,7 @@ void GameScene::buildLevel(bool respawn) {
     spawner->setLevelCreated(true);
     
     //GameHUD
-    GameHUD *hud = GameHUD::create();
+    this->hud = GameHUD::create();
     hud->setupInteractions(this);
     hud->setupPlayer(player);
     
@@ -141,8 +136,14 @@ void GameScene::buildLevel(bool respawn) {
     this->isOnRespawnTask = false;
 }
 
-void GameScene::displayView(int type) {
-    //TODO
+void GameScene::displayView(DDLayerType type) {
+    DynDLayer *layer = DynDLayer::create();
+    std::string data[] = {"Hola","Es","Un","Placeholder"};
+    layer->setupInteraction(this);
+    layer->setupFor(type, data);
+    
+    this->addChild(layer, HUD_LAYER);
+    
 }
 
 //Listener & Handlers
@@ -210,8 +211,34 @@ bool GameScene::onContactBegin(PhysicsContact &contact) {
 void GameScene::onHUDItemClickedCallback(cocos2d::Ref *pSender) {
     switch (((MenuItem*) pSender)->getTag()) {
         case PAUSE_TAG:
-            this->displayView(2);//Pause View
+            this->displayView(DDLayerType::_PauseLayer);//Pause
+            this->isPaused = true;
             CCLOG("PAUSE TAG");
+            break;
+    }
+}
+
+void GameScene::onDyItemClickedCallback(Ref *pSender){
+    switch (((MenuItem*) pSender)->getTag()) {
+        case PLAY_TAG:
+            CCLOG("Resume");
+            if (this->isPaused) {//More things todo
+                this->isPaused = false;
+            } else if (this->isGameOver) {//more things todo
+                this->isGameOver = false;
+                this->buildLevel(false);
+            }
+            this->removeChild(this->getChildByTag(DYNLAYER_TAG));
+            break;
+        case HOME_TAG:
+            CCLOG("Go Back Home");
+            Director::getInstance()->popScene();
+            break;
+        case HELP_TAG:
+            CCLOG("Some item Action");
+            break;
+        default:
+            CCLOG("Not Mapped");
             break;
     }
 }
@@ -221,10 +248,9 @@ void GameScene::update(float dt) {
     auto viewPort = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     
-    if (!this->isOnRespawnTask){
+    if (!this->isOnRespawnTask && !this->isPaused && !this->isGameOver){
         //Move Board
         this->boardObject->move();
-        
         //Move Player depending On Board
         auto playerChild = this->getChildByTag(PLAYER_TAG);
         
@@ -233,7 +259,9 @@ void GameScene::update(float dt) {
             lives--;
           
             if (lives <= 0) {//Display GameOver
-                this->displayView(0);//Game Over Scene/View
+                this->displayView(DDLayerType::_GameOverLayer);//Game Over Scene/View
+                this->isPaused = true;
+                this->isGameOver = true;
                 CCLOG("Game OVer");
             } else {//Continue
                 player->setLives(lives);
@@ -245,12 +273,12 @@ void GameScene::update(float dt) {
         }
         
         //Move Background
-        Point bgPSpeed = this->parallaxMap->getPointSpeed();
         auto first = this->getChildByTag(STANDALONE_PARALLAX_SPRITE_1);
         auto second = this->getChildByTag(STANDALONE_PARALLAX_SPRITE_2);
+        float parallaxSpeed = sqrtf(0.5*0.5 + 0.5*0.5);
         
-        first->setPosition( first->getPosition().x,first->getPosition().y - sqrtf(0.5*0.5 + 0.5*0.5) );
-        second->setPosition( second->getPosition().x,second->getPosition().y - sqrtf(0.5*0.5 + 0.5*0.5) );
+        first->setPosition( first->getPosition().x,first->getPosition().y - parallaxSpeed );
+        second->setPosition( second->getPosition().x,second->getPosition().y - parallaxSpeed );
         
         if( first->getPosition().y <= -(viewPort.height/2) ){
             first->setPosition(first->getPosition().x, second->getPosition().y + viewPort.height);
@@ -262,11 +290,18 @@ void GameScene::update(float dt) {
         
         //Move Blocks Layer
         this->moveSpritesBlock(dt);
+        
+        //Update HUD
+        this->hud->updateValues(dt);
+    } else {
+        GOPosition pos = player->getPosition();
+        player->setPosition(pos.xVal, pos.yVal);
     }
 }
 
 void GameScene::moveSpritesBlock(float dt) {
     auto items = this->getChildren();//Fetching Pending Sprites
+    float blockSpeed = sqrtf(0.3*0.3 + 0.3*0.3);
     Sprite *tmpSp;
     int tag = 0;
     
@@ -278,7 +313,7 @@ void GameScene::moveSpritesBlock(float dt) {
             tag == SPIKE_ITEM_MASK || tag == COIN_ITEM_MASK ||
             tag == POWUP_ITEM_MASK) { //If is a block or interactive item
             Vec2 pos = tmpSp->getPosition();
-            tmpSp->setPosition(pos.x,pos.y - sqrtf(0.6*0.6 + 0.6*0.6));
+            tmpSp->setPosition(pos.x,pos.y - blockSpeed);
             
             if (pos.y < -50 ) { //Elimina el elemento si ya no se ve
                 this->removeChild(tmpSp);
@@ -303,6 +338,8 @@ void GameScene::cleanLevelElements(bool respawn){
 
 
 void GameScene::solveCollisionFor(Node *player,Node *object) {
+    if (this->isPaused)return;
+    
     switch (object->getTag()) {
         case BLOCK_ITEM_MASK: //Bloque
             CCLOG("Chocaste con algo ups"); //perdera salud y a ver si una vida y puntos

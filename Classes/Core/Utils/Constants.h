@@ -28,6 +28,7 @@
 #define PLAYER_TAG 100
 #define PLAYER_EXTRA_TAG 101
 #define HUD_TAG 102
+#define DYNLAYER_TAG 103
 
 //Scenes and Layer and Child Levels
 #define PARALLAX_LAYER 0

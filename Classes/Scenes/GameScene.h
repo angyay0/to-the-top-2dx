@@ -15,15 +15,16 @@
 #include "ParallaxLayer.h"
 #include "Player.h"
 #include "Constants.h"
+#include "DynDLayer.h"
+#include "GameHUD.h"
 
 USING_NS_CC;
 
-class GameScene: public Scene,public GameHUDClickProtocol{
+class GameScene: public Scene,public GameHUDClickProtocol,public DyDClickProtocol{
 private:
-    ParallaxLayer *parallaxMap;
     Player *player;
     GameObject *boardObject;
-    PlayerHability learnedHab;
+    GameHUD *hud;
     bool isGameOver;
     bool isPaused;
     bool isOnRespawnTask;
@@ -35,14 +36,15 @@ private:
     void moveSpritesBlock(float dt);
     void cleanLevelElements(bool respawn);
     void solveCollisionFor(Node *player,Node *object);
-    void displayView(int type);
+    void displayView(DDLayerType type);
 public:
     static Scene *createScene();
     virtual bool init();
     bool createGameScene();
     
     virtual void onAcceleration(Acceleration *acc, Event *event);
-    virtual void onHUDItemClickedCallback(cocos2d::Ref *pSender);
+    virtual void onHUDItemClickedCallback(Ref *pSender);
+    virtual void onDyItemClickedCallback(Ref *pSender);
     virtual bool onContactBegin(PhysicsContact& contact);
     
     CREATE_FUNC(GameScene);

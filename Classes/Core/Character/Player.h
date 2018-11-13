@@ -20,6 +20,8 @@ private:
     int lives;
     long distance;
 public:
+    PlayerHability playerHab;
+    
     void setScore(long score);
     void setLives(int lives);
     void setDistance(long distance);

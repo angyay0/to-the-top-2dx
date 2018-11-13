@@ -57,7 +57,7 @@ GameObject *ObjectsSpawner::spawnBoardObject() {
         board->getSprite()->getPhysicsBody()->setContactTestBitmask(PLAYER_EXTRA_COLLISION_MASK);
         board->getSprite()->getPhysicsBody()->setCollisionBitmask(PLAYER_EXTRA_COLLISION_MASK);
         board->getSprite()->getPhysicsBody()->setCategoryBitmask(PLAYABLE_OBJECT);
-        board->getSprite()->getPhysicsBody()->setMass(50);
+        board->getSprite()->getPhysicsBody()->setMass(100);
         board->getSprite()->setTag(PLAYER_EXTRA_TAG);
         board->setInitialPosition(boardPosition);
         board->movement = zero;
@@ -112,7 +112,7 @@ Player *ObjectsSpawner::spawnPlayer(Size boardSize,GOPosition boardPosition,floa
         player->getSprite()->getPhysicsBody()->setCategoryBitmask(PLAYABLE_OBJECT);
         player->getSprite()->getPhysicsBody()->setGravityEnable(true);
         player->getSprite()->getPhysicsBody()->setDynamic(true);
-        player->getSprite()->getPhysicsBody()->setMass(100);//TBD
+        player->getSprite()->getPhysicsBody()->setMass(500);//TBD
         player->getSprite()->setTag(PLAYER_TAG);
         
         if (oldData != nullptr) { //It Means Copy all Data; Pending if more required

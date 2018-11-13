@@ -72,6 +72,7 @@ void GameHUD::setupInteractions(GameHUDClickProtocol *handler) {
 
 void GameHUD::setupPlayer(Player *player) {
     this->player = player;
+    this->updateValues(0.f);
 }
 
 void GameHUD::updateValues(float dt) {
@@ -80,8 +81,10 @@ void GameHUD::updateValues(float dt) {
     this->scoreLabel->setString(streamer.str());
     streamer.flush();
     
-    streamer << this->player->getLives();
+    int lives = this->player->getLives();
+    streamer << lives;
     this->livesLabel->setString(streamer.str());
+    
     streamer.flush();
     
     this->update(dt);
