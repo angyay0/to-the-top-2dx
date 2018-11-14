@@ -79,7 +79,7 @@ void GameHUD::updateValues(float dt) {
     std::stringstream streamer;
     streamer << this->player->getScore();
     this->scoreLabel->setString(streamer.str());
-    streamer.flush();
+    streamer.str("");
     
     int lives = this->player->getLives();
     streamer << lives;

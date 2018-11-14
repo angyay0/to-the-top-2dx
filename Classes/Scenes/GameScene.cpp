@@ -84,8 +84,8 @@ void GameScene::buildLevel(bool respawn) {
     
     //if (!respawn) { //Just if is First Live Instantiate new, continue otherwise
         //Board
-        this->boardObject = spawner->spawnBoardObject();
-        this->player = spawner->spawnPlayer(this->boardObject->getSprite()->getContentSize(), this->boardObject->getPosition(),(boardOffset*2),this->player,true);
+    this->boardObject = spawner->spawnBoardObject();
+    this->player = spawner->spawnPlayer(this->boardObject->getSprite()->getContentSize(), this->boardObject->getPosition(),(boardOffset*2),!respawn?player:nullptr,this->isGameOver);
    // }
     
     //Add To View
@@ -101,7 +101,7 @@ void GameScene::buildLevel(bool respawn) {
     pos.xVal = origin.x - boardOffset;
     GOPosition newRefPos;
     newRefPos.xVal = pos.xVal;
-    newRefPos.yVal = pos.yVal + 45.f;
+    newRefPos.yVal = pos.yVal + 48.f;
     newRefPos.zVal = pos.zVal;
     
     GameObject *item;
@@ -117,7 +117,7 @@ void GameScene::buildLevel(bool respawn) {
             newRefPos.xVal += 48.f;
         }
         newRefPos.xVal = origin.x ;
-        newRefPos.yVal = newRefPos.yVal + 100.f;
+        newRefPos.yVal = newRefPos.yVal + 130.f;
     }
     //Mark As Level Created
     spawner->setLevelCreated(true);
@@ -129,8 +129,12 @@ void GameScene::buildLevel(bool respawn) {
     
     this->addChild(hud, HUD_LAYER);
     
-    if (COW_DEBUG_MODE) {
+   /* if (COW_DEBUG_MODE) {
         this->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+    }
+    */
+    if (this->isGameOver) {
+        this->isGameOver = false;
     }
    
     this->isOnRespawnTask = false;
@@ -197,11 +201,11 @@ bool GameScene::onContactBegin(PhysicsContact &contact) {
     if (nodeA && nodeB) { //Habilita que hay interaccion de dos elementos aka Existe colision
         if (nodeA->getTag() == PLAYER_TAG ) {
             if (nodeB->getTag() != PLAYER_EXTRA_TAG) { //Evita un Contact Solver para la barra
-                this->solveCollisionFor(nodeA, nodeB);
+                this->solveCollisionFor(nodeA, nodeB,this->getCollisionSide(contact.getContactData()->points[0],nodeA,nodeB));
             }
         } else if (nodeB->getTag() == PLAYER_TAG) {
             if (nodeA->getTag() != PLAYER_EXTRA_TAG) { //Evita un Contact Solver para la barra
-                this->solveCollisionFor(nodeB, nodeA);
+                this->solveCollisionFor(nodeB, nodeA,this->getCollisionSide(contact.getContactData()->points[0],nodeB,nodeA));
             }
         }
     }
@@ -221,15 +225,25 @@ void GameScene::onHUDItemClickedCallback(cocos2d::Ref *pSender) {
 void GameScene::onDyItemClickedCallback(Ref *pSender){
     switch (((MenuItem*) pSender)->getTag()) {
         case PLAY_TAG:
+        {
             CCLOG("Resume");
+            this->removeChild(this->getChildByTag(DYNLAYER_TAG));
             if (this->isPaused) {//More things todo
                 this->isPaused = false;
             } else if (this->isGameOver) {//more things todo
-                this->isGameOver = false;
-                this->buildLevel(false);
+                //this->isGameOver = false;
+                //this->isPaused = false;
+                this->isOnRespawnTask = true;
+                this->buildLevel(true);
             }
-            this->removeChild(this->getChildByTag(DYNLAYER_TAG));
+        }
             break;
+        case NEXT_TAG:
+            CCLOG("Next Level");
+            this->level++;
+            player->setLives(player->getLives()+1);
+            player->calculateScore(150);
+            this->buildLevel(false);
         case HOME_TAG:
             CCLOG("Go Back Home");
             Director::getInstance()->popScene();
@@ -268,7 +282,27 @@ void GameScene::update(float dt) {
                 player->resetLiveLose();
                 player->setPosition(origin.x+viewPort.width/2,origin.y+viewPort.height/2);
                // playerChild->setPosition(Vec2(origin.x+viewPort.width/2,origin.y+viewPort.height/2));
-                this->buildLevel(true);
+                this->buildLevel(false);
+                return;
+            }
+        }
+        
+        if (player->getCurrentHealth() <= 0){ //Lose by Friction and regenerate
+            int lives = player->getLives();
+            lives--;
+            
+            if (lives <= 0) {//Display GameOver
+                this->displayView(DDLayerType::_GameOverLayer);//Game Over Scene/View
+                //this->isPaused = true;
+                this->isGameOver = true;
+                CCLOG("Game OVer");
+            } else {//Continue
+                player->setLives(lives);
+                player->resetLiveLose();
+                player->setPosition(origin.x+viewPort.width/2,origin.y+viewPort.height/2);
+                // playerChild->setPosition(Vec2(origin.x+viewPort.width/2,origin.y+viewPort.height/2));
+                this->buildLevel(false);
+                return;
             }
         }
         
@@ -282,10 +316,14 @@ void GameScene::update(float dt) {
         
         if( first->getPosition().y <= -(viewPort.height/2) ){
             first->setPosition(first->getPosition().x, second->getPosition().y + viewPort.height);
+            
+            this->player->calculateScore(100);//Score Per distance
         }
         
         if( second->getPosition().y <= -(viewPort.height/2) ){
             second->setPosition(second->getPosition().x,first->getPosition().y + viewPort.height);
+            
+            this->player->calculateScore(100);//Score Per distance
         }
         
         //Move Blocks Layer
@@ -301,7 +339,7 @@ void GameScene::update(float dt) {
 
 void GameScene::moveSpritesBlock(float dt) {
     auto items = this->getChildren();//Fetching Pending Sprites
-    float blockSpeed = sqrtf(0.3*0.3 + 0.3*0.3);
+    float blockSpeed = sqrtf(0.25*0.25 + 0.25*0.25);
     Sprite *tmpSp;
     int tag = 0;
     
@@ -317,6 +355,8 @@ void GameScene::moveSpritesBlock(float dt) {
             
             if (pos.y < -50 ) { //Elimina el elemento si ya no se ve
                 this->removeChild(tmpSp);
+                
+                this->player->calculateScore(20);//Score Per Block
             }
         }
     }
@@ -336,22 +376,52 @@ void GameScene::cleanLevelElements(bool respawn){
     }
 }
 
-
-void GameScene::solveCollisionFor(Node *player,Node *object) {
-    if (this->isPaused)return;
+int GameScene::getCollisionSide(Vec2 collisionPos, Node *nodeA, Node *nodeB){
+    //Side Detection Algorithm
+    //This side detections will be doing a MinMax with nodes position
+    //Then it depends on Anchor point to detect sides
+    //TODO: Verify if still works when Dynamic Bodies Fly around
+    Vec2 bodyAPos = nodeA->getPosition();
+    Vec2 bodyBPos = nodeB->getPosition();
+    Size bodyASize = nodeA->getContentSize();
+    Size bodyBSize = nodeB->getContentSize();
+    int position = BOTTOM_DETECTED;
     
-    switch (object->getTag()) {
-        case BLOCK_ITEM_MASK: //Bloque
-            CCLOG("Chocaste con algo ups"); //perdera salud y a ver si una vida y puntos
-            break;
-        case STGCL_ITEM_MASK: //Stage Clear Box
-            CCLOG("GANASTE"); //Siguiente Nivel
-            break;
-        case BONUS_ITEM_MASK: //Bonus item: TODO
-            break;
-        case COIN_ITEM_MASK: //Coin item: TODO
-            break;
-        case POWUP_ITEM_MASK: //PowerUp item: TODO
-            break;
+    //Always As player as main Object
+    if( collisionPos.x >= bodyAPos.x ){
+        position = RIGHT_DETECTED;
+    }else if (collisionPos.x <= bodyAPos.x){
+        position = LEFT_DETECTED;
+    }
+    
+    //Verify if top Collide  TODO: Improve Detection
+    if (collisionPos.y >= (bodyAPos.y-1) && collisionPos.y <= (bodyAPos.y+1+bodyASize.height*.4)) {
+        position = TOP_DETECTED;
+    }
+    
+    return position;
+}
+
+void GameScene::solveCollisionFor(Node *player,Node *object,int side) {
+    if (this->isPaused)return;
+    if (side == TOP_DETECTED){
+        switch (object->getTag()) {
+            case BLOCK_ITEM_MASK: //Bloque
+                CCLOG("Chocaste con algo ups"); //perdera salud y a ver si una vida y puntos
+                this->player->calculateDamage(0.08);
+                break;
+            case STGCL_ITEM_MASK: //Stage Clear Box
+                CCLOG("GANASTE"); //Siguiente Nivel
+                //this->isPaused = true;
+                this->player->calculateScore(150);
+                this->displayView(DDLayerType::_WinLayer);
+                break;
+            case BONUS_ITEM_MASK: //Bonus item: TODO
+                break;
+            case COIN_ITEM_MASK: //Coin item: TODO
+                break;
+            case POWUP_ITEM_MASK: //PowerUp item: TODO
+                break;
+        }
     }
 }

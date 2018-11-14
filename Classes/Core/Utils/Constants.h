@@ -17,12 +17,19 @@
 
 //Interaction Constants
 #define PLAY_TAG 1
-#define TROPHY_TAG 2
-#define HELP_TAG 3
-#define CREDITS_TAG 4
-#define SHARE_TAG 5
-#define HOME_TAG 6
-#define BACK_TAG 7
+#define NEXT_TAG 2
+#define TROPHY_TAG 3
+#define HELP_TAG 4
+#define CREDITS_TAG 5
+#define SHARE_TAG 6
+#define HOME_TAG 7
+#define BACK_TAG 8
+
+//Collision Constants
+#define TOP_DETECTED 0x01
+#define RIGHT_DETECTED 0x02
+#define LEFT_DETECTED 0x03
+#define BOTTOM_DETECTED 0x04
 
 //Tags for Id in Scene
 #define PLAYER_TAG 100
@@ -55,7 +62,6 @@
 
 //Configurations Extra
 #define COW_DEBUG_MODE 1
-
 
 typedef enum {
     _RUNNING,

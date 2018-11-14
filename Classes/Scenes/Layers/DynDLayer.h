@@ -28,7 +28,7 @@ private:
     DyDClickProtocol *clickHandler;
     void configurePause();
     void configureGOver();
-  //  void configureWinner();
+    void configureWinner();
 public:
     virtual bool init();
     void setupFor(DDLayerType type,std::string data[]);

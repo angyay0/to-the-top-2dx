@@ -31,11 +31,12 @@ private:
     int level;
     
     //Functions
+    int getCollisionSide(Vec2 collisionPos,Node *nodeA,Node *nodeB);
     void update(float dt);
     void buildLevel(bool respawn);
     void moveSpritesBlock(float dt);
     void cleanLevelElements(bool respawn);
-    void solveCollisionFor(Node *player,Node *object);
+    void solveCollisionFor(Node *player,Node *object,int side);
     void displayView(DDLayerType type);
 public:
     static Scene *createScene();

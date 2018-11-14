@@ -42,7 +42,7 @@ public:
 	struct SpawnerControl isProcessCompleted();
     GameObject *spawnBoardObject();//One
     GameObject *spawnMapObject(int type,GOPosition refPosition,float offset);//One
-    Player *spawnPlayer(Size boardSize,GOPosition boardPosition,float offset,Player *oldData,bool centered);//One
+    Player *spawnPlayer(Size boardSize,GOPosition boardPosition,float offset,Player *oldData,bool gover);//One
     void setLevelCreated(bool value);
     void resetPlayer();
     void resetLevel();

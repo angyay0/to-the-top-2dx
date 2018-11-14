@@ -70,7 +70,7 @@ GameObject *ObjectsSpawner::spawnBoardObject() {
     return nullptr;
 }
 
-Player *ObjectsSpawner::spawnPlayer(Size boardSize,GOPosition boardPosition,float offset,Player *oldData,bool centered) {
+Player *ObjectsSpawner::spawnPlayer(Size boardSize,GOPosition boardPosition,float offset,Player *oldData,bool gover) {
     if(!this->control.isPlayerSpawned) {
         GOAttributes playerAttributes;
         playerAttributes.name = "Ball";
@@ -88,7 +88,7 @@ Player *ObjectsSpawner::spawnPlayer(Size boardSize,GOPosition boardPosition,floa
         playerSpecialAttributes.health = 1.05;
         
         GOPosition playerPosition;
-        playerPosition.xVal = (!centered)?this->viewOrigin.x:(this->viewOrigin.x+this->viewPort.width/2);
+        playerPosition.xVal = (this->viewOrigin.x+this->viewPort.width/2);
         playerPosition.yVal = boardPosition.yVal + boardSize.height + offset;
         
         auto spriteCache = SpriteFrameCache::getInstance();
@@ -100,7 +100,7 @@ Player *ObjectsSpawner::spawnPlayer(Size boardSize,GOPosition boardPosition,floa
         
         Player *player = new Player();
         player->initWith(SpriteFrameCache::getInstance()->getSpriteFrameByName("player1.png"), playerAttributes,2);
-        player->setExtras(0.5, this->control.drawAnchor, player->getSprite()->getContentSize(), Vec2(0.5,0.5));
+        player->setExtras(0.4, this->control.drawAnchor, player->getSprite()->getContentSize(), Vec2(0.5,0.5));
         player->getSprite()->runAction(RepeatForever::create(Animate::create(anim)));
         player->setSpecialAttributes(playerSpecialAttributes);
         player->setInitialPosition(playerPosition);
@@ -115,7 +115,7 @@ Player *ObjectsSpawner::spawnPlayer(Size boardSize,GOPosition boardPosition,floa
         player->getSprite()->getPhysicsBody()->setMass(500);//TBD
         player->getSprite()->setTag(PLAYER_TAG);
         
-        if (oldData != nullptr) { //It Means Copy all Data; Pending if more required
+        if (oldData != nullptr && !gover) { //It Means Copy all Data; Pending if more required
             player->setLives(oldData->getLives());
             player->setScore(oldData->getScore());
             player->setDistance(oldData->getDistance());

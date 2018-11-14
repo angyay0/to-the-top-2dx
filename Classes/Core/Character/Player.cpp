@@ -37,13 +37,11 @@ void Player::resetLiveLose(){
 
 void Player::calculateDamage(float damage){
     currentHealth -= damage;
-    if (currentHealth <= 0) {
-        this->setLives(this->getLives()-1);
-    }
 }
 
 void Player::calculateScore(float score){
     currentScore += score;
+    this->score += score;
 }
 
 long Player::getScore() {
@@ -56,6 +54,10 @@ int Player::getLives() {
 
 long Player::getDistance() {
     return distance;
+}
+
+float Player::getCurrentHealth(){
+    return this->currentHealth;
 }
 
 void Player::moveXAxis(float min, float max, float dt) {

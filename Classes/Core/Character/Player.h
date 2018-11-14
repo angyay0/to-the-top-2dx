@@ -34,6 +34,7 @@ public:
     long getScore();
     long getDistance();
     int getLives();
+    float getCurrentHealth();
     
     void moveYAxis(float min,float max,float dt);
     void moveXAxis(float min,float max,float dt);
