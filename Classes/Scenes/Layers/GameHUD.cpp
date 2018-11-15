@@ -40,6 +40,18 @@ bool GameHUD::setupView() {
     label2->setPosition(label2->getContentSize().width - topPadding, origin.y + viewPort.height - topPadding);
     this->livesLabel->setPosition(label2->getPosition().x + label2->getContentSize().width - 5, label2->getPosition().y);
     
+    //Life Indicator
+    Sprite *heart = Sprite::create("health_icon.png");
+    heart->setPosition(Vec2(origin.x+heart->getContentSize().width,label2->getPosition().y-20));
+    
+    this->lifeBar = LoadingBar::create("slider_health.png");
+    this->lifeBar->setCapInsets(Rect(0,0,0,0));
+    this->lifeBar->setScale9Enabled(true);
+    this->lifeBar->setContentSize(Size(100,10));
+    this->lifeBar->setPosition(Vec2(80,label2->getPosition().y-20));
+    this->lifeBar->setPercent(100);
+    
+    
     menu->setPosition(origin.x + viewPort.width/2, origin.y - pauseMenuItem->getContentSize().height   + viewPort.height - topPadding);
     
     //Add To Menu
@@ -51,6 +63,8 @@ bool GameHUD::setupView() {
     this->addChild(label2);
     this->addChild(this->scoreLabel);
     this->addChild(this->livesLabel);
+    this->addChild(this->lifeBar);
+    this->addChild(heart);
     
     //Configure Tag
     this->setTag(HUD_TAG);
@@ -84,8 +98,12 @@ void GameHUD::updateValues(float dt) {
     int lives = this->player->getLives();
     streamer << lives;
     this->livesLabel->setString(streamer.str());
-    
     streamer.flush();
+    
+    GOSAttributes special = player->getSpecialAttributes();
+    
+    float perc = player->getCurrentHealth()*100.f/(special.health*special.resistance);
+    this->lifeBar->setPercent(perc);
     
     this->update(dt);
 }
