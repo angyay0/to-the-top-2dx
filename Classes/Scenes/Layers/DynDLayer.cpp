@@ -26,7 +26,7 @@ void DynDLayer::setupFor(DDLayerType type,std::string data[]) {
             break;
         case _WinLayer:
             CCLOG("Winner");
-           // this->configureWinner();
+            this->configureWinner();
             break;
         default:
             CCLOG("General");

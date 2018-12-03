@@ -36,6 +36,8 @@ bool GameScene::createGameScene() {
     skin.spritesFile = "sprites.plist";
     ObjectsSpawner::getInstance(skin,viewPort,origin,scale);
     
+    this->level++; //Inicia en nivel 1
+    
     //Create Level Objects
     this->buildLevel(false);
     
@@ -138,6 +140,18 @@ void GameScene::buildLevel(bool respawn) {
     }
    
     this->isOnRespawnTask = false;
+    
+    //Indicate actual level
+    std::stringstream ss;
+    ss << this->level;
+    Label *levelLabel = Label::createWithTTF("Level " + ss.str(), "fonts/arial.ttf", 40);
+    auto fadeout = FadeOut::create(4.f);
+    
+    levelLabel->setTag(0);
+    levelLabel->setPosition(origin.x + viewPort.width/2.f, origin.y + viewPort.height/2.f);
+    levelLabel->runAction(Sequence::create(FadeOut::create(5.f),CCCallFuncN::create(this,callfuncN_selector(GameScene::removeLabel)),NULL));
+    
+    this->addChild(levelLabel,SCENE_DYNAMIC_OBJECT_LAYER);
 }
 
 void GameScene::displayView(DDLayerType type) {
@@ -148,6 +162,11 @@ void GameScene::displayView(DDLayerType type) {
     
     this->addChild(layer, HUD_LAYER);
     
+}
+
+void GameScene::removeLabel(Node *node) {
+    node->setVisible(false);
+    this->removeChild(node);
 }
 
 //Listener & Handlers
@@ -387,16 +406,18 @@ int GameScene::getCollisionSide(Vec2 collisionPos, Node *nodeA, Node *nodeB){
     Size bodyBSize = nodeB->getContentSize();
     int position = BOTTOM_DETECTED;
     
-    //Always As player as main Object
-    if( collisionPos.x >= bodyAPos.x ){
-        position = RIGHT_DETECTED;
-    }else if (collisionPos.x <= bodyAPos.x){
-        position = LEFT_DETECTED;
-    }
     
-    //Verify if top Collide  TODO: Improve Detection
-    if (collisionPos.y >= (bodyAPos.y-1) && collisionPos.y <= (bodyAPos.y+1+bodyASize.height*.4)) {
+    //Verify if top Collide in a small space where it could be called centered top
+    //TODO: Make improvement on closes collision to anchor point, due it confuses the algorithm
+    if (collisionPos.y >= (bodyAPos.y + 2) && ((collisionPos.x < bodyAPos.x - 1) || (collisionPos.x + 1) ) ){
         position = TOP_DETECTED;
+    } else { //Is not a top collision on top
+        //Always As player as main Object
+        if( collisionPos.x >= (bodyAPos.x + bodyASize.width/2.f) ){
+            position = RIGHT_DETECTED;
+        }else if (collisionPos.x <= (bodyAPos.x - bodyASize.width/2.f) ){
+            position = LEFT_DETECTED;
+        }
     }
     
     return position;
@@ -408,12 +429,12 @@ void GameScene::solveCollisionFor(Node *player,Node *object,int side) {
         switch (object->getTag()) {
             case BLOCK_ITEM_MASK: //Bloque
                 CCLOG("Chocaste con algo ups"); //perdera salud y a ver si una vida y puntos
-                this->player->calculateDamage(0.08);
+                this->player->calculateDamage(0.0609);
                 break;
             case STGCL_ITEM_MASK: //Stage Clear Box
                 CCLOG("GANASTE"); //Siguiente Nivel
                 //this->isPaused = true;
-                this->player->calculateScore(150);
+                this->player->calculateScore(160);
                 this->displayView(DDLayerType::_WinLayer);
                 break;
             case BONUS_ITEM_MASK: //Bonus item: TODO

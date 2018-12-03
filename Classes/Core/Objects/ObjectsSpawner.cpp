@@ -84,8 +84,8 @@ Player *ObjectsSpawner::spawnPlayer(Size boardSize,GOPosition boardPosition,floa
         
         GOSAttributes playerSpecialAttributes;
         playerSpecialAttributes.materialType = 1;
-        playerSpecialAttributes.resistance = 1.20;
-        playerSpecialAttributes.health = 1.05;
+        playerSpecialAttributes.resistance = 1.25;
+        playerSpecialAttributes.health = 1.56;
         
         GOPosition playerPosition;
         playerPosition.xVal = (this->viewOrigin.x+this->viewPort.width/2);

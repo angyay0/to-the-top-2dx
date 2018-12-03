@@ -43,18 +43,21 @@ bool MainMenuScene::init() {
     
     //Menu
     auto menu = Menu::create();
-    menu->setPosition(Vec2(origin.x + viewPort.width/2, viewPort.height/2 + origin.y));
+    menu->setPosition(Vec2(origin.x,origin.y));
     
     //Posicionamiento de elementos
     gameTitle->setPosition(origin.x + (viewPort.width/2 ),
                            origin.y + viewPort.height - gameTitle->getContentSize().height);
     
     playMenuItem->setScale(scale);
-    playMenuItem->setPosition(origin.x, origin.y - (playMenuItem->getContentSize().height/2));
+    playMenuItem->setPosition((viewPort.width/2),origin.y + gameTitle->getPosition().y
+                              - (playMenuItem->getContentSize().height + gameTitle->getContentSize().height));
     trophyMenuItem->setScale(scale);
-    trophyMenuItem->setPosition( playMenuItem->getPosition().x + viewPort.width/2 - trophyMenuItem->getContentSize().width - 10, origin.y - (viewPort.height/2) + 10 );
+    trophyMenuItem->setPosition( viewPort.width - (trophyMenuItem->getContentSize().width+origin.x),
+                                trophyMenuItem->getContentSize().height);
     helpMenuItem->setScale(scale);
-    helpMenuItem->setPosition( playMenuItem->getPosition().x - viewPort.width/2 + helpMenuItem->getContentSize().width + 10, origin.y - (viewPort.height/2) + 10  );
+    helpMenuItem->setPosition(origin.x + helpMenuItem->getContentSize().width/2.f,
+                              helpMenuItem->getContentSize().height);
     
     //Creacion del menu con los elemtos para mostrar
     menu->addChild(playMenuItem);

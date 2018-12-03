@@ -30,6 +30,7 @@
 #define RIGHT_DETECTED 0x02
 #define LEFT_DETECTED 0x03
 #define BOTTOM_DETECTED 0x04
+#define TOP_SIDE_THRESHOLD 1.56f
 
 //Tags for Id in Scene
 #define PLAYER_TAG 100

@@ -38,6 +38,7 @@ private:
     void cleanLevelElements(bool respawn);
     void solveCollisionFor(Node *player,Node *object,int side);
     void displayView(DDLayerType type);
+    void removeLabel(Node *node);
 public:
     static Scene *createScene();
     virtual bool init();
